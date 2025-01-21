@@ -11,3 +11,7 @@ build/
 # (필요하다면) pdf 파일도 무시
 *.pdf
 *.cls
+*.zip
+*.bbl
+*.blg
+
