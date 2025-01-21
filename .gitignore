@@ -1,0 +1,13 @@
+*.aux
+*.log
+*.synctex.gz
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+# Build or output folder
+out/
+build/
+# (필요하다면) pdf 파일도 무시
+*.pdf
+*.cls
