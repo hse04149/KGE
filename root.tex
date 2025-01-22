@@ -318,7 +318,7 @@ The stem nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). 
 
 \subsubsection{Cyclic Digraphs}
 
-Cyclic digraphs contain  so their graph laplacian matrices include no zero rows. Additionally, if all vertices in a cyclic digraph belong to a spanning tree, only one zero eigenvalue appears. Its corresponding right eigenvector \( q \) is \( \mathbf{1}_N \) \cite{olfati-saber_consensus_2007}. The value \( k \) is arbitrary and satisfies \( p^\top \dot{x}_0 = p^\top (-Lx(0) + r) = p^\top r = v \) (since \( p^\top L = 0 \)). In the case of cyclic digraphs, \eqref{eq:0_N} is replaced by \eqref{eq:v_N}.
+Cyclic digraphs contain no stems so there is no zero rows in their graph laplacian. Additionally, if all vertices in a cyclic digraph belong to a spanning tree, only one zero eigenvalue appears. Its corresponding right eigenvector \( q \) is \( \mathbf{1}_N \) \cite{olfati-saber_consensus_2007}. The value \( k \) is arbitrary and satisfies \( p^\top \dot{x}_0 = p^\top (-Lx(0) + r) = p^\top r = v \) (since \( p^\top L = 0 \)). In the case of cyclic digraphs, \eqref{eq:0_N} is replaced by \eqref{eq:v_N}.
 
 \begin{equation}\label{eq:v_N}
     \dot{x} \rightarrow qp^\top \dot{x}_0 = \mathbf{1}_N \times v = \mathbf{v}_N
