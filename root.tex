@@ -367,7 +367,13 @@ reconstructed the embedding dynamics for ambispective interaction.
     \dot{x}_i = k_p \sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{ji})
 \end{equation}
 
-We expand the range of the node's neighbors to include its tails. That makes heads influenced by their tails
+We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations $ <t, -r, h> $. 
+
+\noindent $<-r>$ is an opposite relation of $<r>$. We added a new condition:
+
+\[r_{ji} = -r_{ij} \]
+
+
 
 \section{Simulation}
 We conducted computer simulations for embedding formulation: the acyclic digraph in Fig. \ref{fig:DAG} and the cyclic digraph in Fig. \ref{fig:DCG}. These simulations focus on how agents and their velocities change over time, providing complementary insights to our main analysis.
