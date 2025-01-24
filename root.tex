@@ -99,7 +99,7 @@ The \textbf{Laplacian matrix} \( L \) is derived from the adjacency matrix and p
 L = D - A
 \]
 
-\noindent where \( D \) is the diagonal matrix of in-degrees, with each diagonal element \( D(i, i) \) equal to the in-degree of vertex \( v_i \), the number of edges directed towards \( v_i \).
+\noindent where \( D \) is the diagonal matrix of in-degrees, with each diagonal element \( D(i, i) \) is equal to the in-degree of vertex \( v_i \), the number of edges directed towards \( v_i \).
 
 \noindent The Laplacian matrix is fundamental in analyzing the dynamics of multi-agent systems, particularly in formation control, where it governs how agents influence each other based on the underlying graph structure.
 
@@ -228,7 +228,7 @@ A stem acts solely as head entities without being influenced by any external fac
 \[
     \dim \ker L \geq m
 \]
-If non-zero rows of $L$ are linearly independent, it exactly equals to $m$. 
+If non-zero rows of $L$ are linearly independent, its number is exactly $m$. 
 
 Nodes within a cycle serve both as head and tail entities. Fig. \ref{fig:DCG} provides a good example of a triangular cycle. All rows of the Laplacian matrix \( L \) have a zero sum, resulting in \( L \) having a one-dimensional kernel. Additionally, the rows are linearly dependent because there are no zero rows.
 
@@ -237,7 +237,7 @@ Given these features, we organized several cases of graphs for knowledge graph e
 
 \subsubsection{Acyclic Digraphs}
 
-We defined an acyclic digraph as having some stems. These stems will strongly stabilize embedding result. Moreover, in cases of acyclic digraph, zero multiplicity of $L$'s eigenvalues must equals to the number of stems. The following lemma then holds for acyclic digraphs.
+We defined an acyclic digraph as having some stems. These stems will strongly stabilize embedding result. Moreover, in cases of acyclic digraph, zero multiplicity of $L$'s eigenvalues must equal the number of stems. The following lemma then holds for acyclic digraphs.
 
 \begin{lemma}\label{lemma:p}
 Let the \( n \)-th row of \( L \) be a zero row. Then the null space of this row includes vectors of the form:
@@ -360,19 +360,18 @@ X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_
 \end{split}
 \end{equation}
 
-\subsection{Non-directional Embedding} 
+\subsection{Undirectional Embedding} 
 We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are enforced to move desired relative positions while heads receive no external forces. However, we 
 reconstructed the embedding dynamics for ambispective interaction. 
 \begin{equation}
     \dot{x}_i = k_p \sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{ji})
 \end{equation}
 
-We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations $ <t, -r, h> $. 
+We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations. $ <t, -r, h> $. Therefore we added a new condition: 
 
-\noindent $<-r>$ is an opposite relation of $<r>$. We added a new condition:
+\[r_{ji} = -r_{ij}\] 
 
-\[r_{ji} = -r_{ij} \]
-
+Undirected graphs always have one or more spanning trees, and their graph laplacians are symmetry. These features assure only one zero eigenvalue and $ q = 1_N $. 
 
 
 \section{Simulation}
