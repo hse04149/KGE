@@ -224,7 +224,7 @@ Given the dynamics \eqref{eq:total_dynamic}, we can derive another equation:
 \noindent The equation \eqref{eq:solution} reminds us that $L$'s column and row null spaces critically impact multi-agent formation. 
 To clarify it, we explore the shapes of the graphs that directly influence nullity of \( L\). We distinguish between two features of digraphs for KGE problems: \textbf{Stems} and \textbf{Cycles}.
 
-A stem acts solely as head entities without being influenced by any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a stem node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since stems have no incoming edges, the Laplacian matrix \( L \) of graphs with \( m \) stem will have \( m \) zero rows. Consequently:
+A stem acts solely as head entities without being influenced by any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a stem node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since stems have no incoming edges, the Laplacian matrix \( L \) of graphs with \( m \) stem will have \( m \) zero rows:
 \[
     \dim \ker L \geq m
 \]
@@ -257,7 +257,7 @@ If an acyclic digraph satisfies Lemma \ref{lemma:p}, its embedding formation wil
 \end{theorem}
 
 \begin{proof}
-The stem nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). Consequently:
+The stem nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). 
 \begin{equation}\label{eq:0_N}
     \dot{x} \rightarrow \sum_{n=1}^M q_n p_n^\top \dot{x}_0 = \sum_{n=1}^M (q_n \times 0) = \mathbf{0}_N
 \end{equation}
@@ -371,8 +371,13 @@ We expand the range of the node's neighbors to include its tails. That makes the
 
 \[r_{ji} = -r_{ij}\] 
 
-Undirected graphs always have one or more spanning trees, and their graph laplacians are symmetry. These features assure only one zero eigenvalue and $ q = 1_N $. 
+Undirected graphs always have one or more spanning trees, and their graph laplacians are symmetry. These features assure only one zero eigenvalue and $ q = 1_N $. According to (\ref{eq:2dot}) and (\ref{eq:solution}), all agent's velocity also converge to $p^\top r$ where $p = 1_N / N $. 
 
+\[
+p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
+\]
+
+\noindent The result is zero because of zero summation of every relation vector. ($\because r_{ji} = -r_{ij}$). Consequently, undirected knowledge graphs have settled embedding results. 
 
 \section{Simulation}
 We conducted computer simulations for embedding formulation: the acyclic digraph in Fig. \ref{fig:DAG} and the cyclic digraph in Fig. \ref{fig:DCG}. These simulations focus on how agents and their velocities change over time, providing complementary insights to our main analysis.
