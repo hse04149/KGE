@@ -380,9 +380,9 @@ p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
 \noindent The result is zero because of zero summation of every relation vector. ($\because r_{ji} = -r_{ij}$). Consequently, undirected knowledge graphs have settled embedding results. 
 
 \section{Simulation}
-We conducted computer simulations for embedding formulation: the acyclic digraph in Fig. \ref{fig:DAG} and the cyclic digraph in Fig. \ref{fig:DCG}. These simulations focus on how agents and their velocities change over time, providing complementary insights to our main analysis.
+We conducted computer simulations of embedding formations for several knowledge graphs. These simulations focus on how agents move over time, providing complementary insights to our main analysis.
 
-The embedding space is represented in $x$ and $y$ coordinates, with all entities starting from random initial positions. Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
+The embedding space is represented in $x$ and $y$ coordinates, with all entities starting from random initial positions. %Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
 
 \begin{figure}[thb]
 \begin{center}
@@ -391,15 +391,6 @@ The embedding space is represented in $x$ and $y$ coordinates, with all entities
 \label{fig:DAGstate}
 \end{center}
 \vspace{-3mm}
-\end{figure}
-
-\begin{figure}[thb]
-\begin{center}
-\includegraphics[width=7cm]{IMG/DAGvelocity.png}
-\caption{Entities in the acyclic digraph, velocity converges to zero.}
-\label{fig:DAGvelocity}
-\end{center}
-\vspace{-0mm}
 \end{figure}
 
 In Fig. \ref{fig:DAGstate}, the five entities have found their respective embedding points. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
@@ -413,6 +404,18 @@ In Fig. \ref{fig:DAGstate}, the five entities have found their respective embedd
 \end{equation}
 
 The outcome \eqref{eq:result1} accomplishes $Lx^* - r = 0$ and leads to $\dot{x} \rightarrow 0$ as illustrated in Fig. \ref{fig:DAGvelocity}. 
+
+
+\begin{figure}[thb]
+\begin{center}
+\includegraphics[width=7cm]{IMG/DAGvelocity.png}
+\caption{Entities in the acyclic digraph, velocity converges to zero.}
+\label{fig:DAGvelocity}
+\end{center}
+\vspace{-0mm}
+\end{figure}
+
+
 
 \begin{figure}[thb]
 \begin{center}
