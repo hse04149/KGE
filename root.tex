@@ -191,7 +191,7 @@ The matrix \( L \) has specific properties, particularly regarding its singulari
 \end{equation}
 \end{subequations}
 
-\eqref{eq:total_dynamic} is an expanded vector form of \eqref{eq:dis_dynamic}.
+\eqref{eq:total_dynamic} is a vector form of \eqref{eq:dis_dynamic}.
 
 \noindent The dynamics in \eqref{eq:fc_law} represent a single integrator control law for displacement-based formation control of digraphs with a Laplacian matrix. As shown by the dynamics, the current state directly influences the rate of change. Thus, the previous distributed optimization problem and the new formation control problem are equivalent. Entities follow the control law \eqref{eq:fc_law}, making it possible to use control theory methods to analyze features of a new embedding system in continuous time.
 
@@ -382,7 +382,7 @@ p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
 \section{Simulation}
 We conducted computer simulations of embedding formations for several knowledge graphs. These simulations focus on how agents move over time, providing complementary insights to our main analysis.
 
-The embedding space is represented in $x$ and $y$ coordinates, with all entities starting from random initial positions. %Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
+The embedding space is represented in $x$ and $y$ coordinates, with all entities starting from random initial positions. All relation vectors are normalized as 1 magnitude. %Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
 
 \begin{figure}[thb]
 \begin{center}
@@ -393,7 +393,7 @@ The embedding space is represented in $x$ and $y$ coordinates, with all entities
 \vspace{-3mm}
 \end{figure}
 
-In Fig. \ref{fig:DAGstate}, the five entities have found their respective embedding points. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
+First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities have found their respective embedding points in Fig. \ref{fig:DAGstate}. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
 \begin{equation}\label{eq:result1}
 \begin{split}
     E_2 &= E_1 + r_{12}\\
@@ -403,7 +403,16 @@ In Fig. \ref{fig:DAGstate}, the five entities have found their respective embedd
 \end{split}
 \end{equation}
 
-The outcome \eqref{eq:result1} accomplishes $Lx^* - r = 0$ and leads to $\dot{x} \rightarrow 0$ as illustrated in Fig. \ref{fig:DAGvelocity}. 
+The outcome \eqref{eq:result1} accomplishes $Lx^* - r = 0$. We prepared a bigger embedding result of 50 nodes. 
+
+\begin{figure}[thb]
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/ag_50nodes.png}
+    \caption{Embedding of an acyclic graph with 50 nodes.}
+    \label{fig:ag_50nodes}
+    \end{center}
+    \vspace{-0mm}
+\end{figure}
 
 
 \begin{figure}[thb]
