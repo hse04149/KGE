@@ -228,7 +228,7 @@ A stem acts solely as head entities without being influenced by any external fac
 \[
     \dim \ker L \geq m
 \]
-If non-zero rows of $L$ are linearly independent, its number is exactly $m$. 
+If non-zero rows of \(L\) are linearly independent, its number is exactly \(m\). 
 
 Nodes within a cycle serve both as head and tail entities. Fig. \ref{fig:DCG} provides a good example of a triangular cycle. All rows of the Laplacian matrix \( L \) have a zero sum, resulting in \( L \) having a one-dimensional kernel. Additionally, the rows are linearly dependent because there are no zero rows.
 
@@ -237,7 +237,7 @@ Given these features, we organized several cases of graphs for knowledge graph e
 
 \subsubsection{Acyclic Digraphs}
 
-We defined an acyclic digraph as having some stems. These stems will strongly stabilize embedding result. Moreover, in cases of acyclic digraph, zero multiplicity of $L$'s eigenvalues must equal the number of stems. The following lemma then holds for acyclic digraphs.
+We defined an acyclic digraph as having some stems. These stems will strongly stabilize embedding result. Moreover, in cases of acyclic digraph, zero multiplicity of \(L\)'s eigenvalues must equal the number of stems. The following lemma then holds for acyclic digraphs.
 
 \begin{lemma}\label{lemma:p}
 Let the \( n \)-th row of \( L \) be a zero row. Then the null space of this row includes vectors of the form:
@@ -339,7 +339,7 @@ x_i - x_j = (vt + X_i) - (vt +X_j) = X_i-X_j
 \]
 %We define this invariant relative formation $X$ as the embedding result in diverging cases.
 
-To investigate more specifically, we concentrated on \eqref{eq:total_dynamic}. As the system works for a while, all velocities will become closed to $v$. 
+To investigate more specifically, we concentrated on \eqref{eq:total_dynamic}. As the system works for a while, all velocities will become closed to \(v\). 
 
 \begin{equation}\label{eq:findX}
 \begin{split}
@@ -350,50 +350,49 @@ To investigate more specifically, we concentrated on \eqref{eq:total_dynamic}. A
 \end{split}
 \end{equation}
 
-Since $q=\mathbf{1}_N$ is a right eigenvector of $\lambda_1 = 0$, only $X$ has left. We determined \( X \) from \eqref{eq:findX}, where \( + \) denotes the pseudo-inverse because of \( L \)'s singularity. Followings are agent-based equations with respect to $X$:
+Since \(q=\mathbf{1}_N\) is a right eigenvector of \(\lambda_1 = 0\), only \(X\) has left. We determined \( X \) from \eqref{eq:findX}, where \( + \) denotes the pseudo-inverse because of \( L \)'s singularity. Followings are agent-based equations with respect to \(X\):
 
 \begin{equation}
-\begin{split}
-\dot{x}_i &= k_p(\sum_{j \in \mathcal{H}_i} (x_i - x_j) -r_i) \\
-\rightarrow v &= k_p(\sum_{j \in \mathcal{H}_i} (X_i - X_j) - r_i) \\
-X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_p})
-\end{split}
+    \begin{split}
+    \dot{x}_i &= k_p(\sum_{j \in \mathcal{H}_i} (x_i - x_j) -r_i) \\
+    \rightarrow v &= k_p(\sum_{j \in \mathcal{H}_i} (X_i - X_j) - r_i) \\
+    X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_p})
+    \end{split}
 \end{equation}
 
 \subsection{Undirectional Embedding} 
-We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are enforced to move desired relative positions while heads receive no external forces. However, we 
-reconstructed the embedding dynamics for ambispective interaction. 
+We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are only enforced to move desired relative positions while heads receive no external forces. However, we reconstructed the embedding dynamics for ambispective interaction. 
 \begin{equation}
     \dot{x}_i = k_p \sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{ji})
 \end{equation}
 
-We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations. $ <t, -r, h> $. Therefore we added a new condition: 
+We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations. \( <t, -r, h> \). Therefore we added a new condition: 
 
 \[r_{ji} = -r_{ij}\] 
 
-Undirected graphs always have one or more spanning trees, and their graph laplacians are symmetry. These features assure only one zero eigenvalue and $ q = 1_N $. According to (\ref{eq:2dot}) and (\ref{eq:solution}), all agent's velocity also converge to $p^\top r$ where $p = 1_N / N $. 
+A connected undirected graphs always has a symmetry graph laplacian that involves only one zero eigenvalue and \( q = 1_N \) \cite{olfati-saber_consensus_2007}. According to (\ref{eq:2dot}) and (\ref{eq:solution}), all agent's velocity also converge to \(p^\top r\) where \(p = 1_N / N \). 
 
 \[
 p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
 \]
 
-\noindent The result is zero because of zero summation of every relation vector. ($\because r_{ji} = -r_{ij}$). Consequently, undirected knowledge graphs have settled embedding results. 
+\noindent The equation's result is finally zero. (\(\because r_{ji} = -r_{ij}\)). Consequently, undirected knowledge graphs have settled embedding results. 
 
 \section{Simulation}
 We conducted computer simulations of embedding formations for several knowledge graphs. These simulations focus on how agents move over time, providing complementary insights to our main analysis.
 
-The embedding space is represented in $x$ and $y$ coordinates, with all entities starting from random initial positions. All relation vectors are normalized as 1 magnitude. %Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
+The embedding space is represented in \(x\) and \(y\) coordinates, with all entities starting from random initial positions. All relation vectors are normalized as 1 magnitude. %Since the control law \eqref{eq:fc_law} contains no nonlinear terms, the $x$ and $y$ coordinates of each agent evolve independently. %As a result, the following figures will illustrate only the changes in the $x$-coordinate for simplicity.
 
 \begin{figure}[thb]
-\begin{center}
-\includegraphics[width=7cm]{IMG/AG_simul3.png}
-\caption{Converging acyclic digraph composed of 5 entities.}
-\label{fig:DAGstate}
-\end{center}
-\vspace{-3mm}
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/AG_simul3.png}
+    \caption{Converging acyclic digraph composed of 5 entities.}
+    \label{fig:DAGstate}
+    \end{center}
+    \vspace{-3mm}
 \end{figure}
 
-First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities have found their respective embedding points in Fig. \ref{fig:DAGstate}. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
+First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities found their respective embedding points in Fig. \ref{fig:DAGstate}. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
 \begin{equation}\label{eq:result1}
 \begin{split}
     E_2 &= E_1 + r_{12}\\
@@ -403,45 +402,83 @@ First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities
 \end{split}
 \end{equation}
 
-The outcome \eqref{eq:result1} accomplishes $Lx^* - r = 0$. We prepared a bigger embedding result of 50 nodes. 
+The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). We prepared a bigger embedding result of 50 nodes. 
+
+\begin{figure*}[h] % 'h' specifies placement (here)
+    \centering
+    \begin{tikzpicture}[>=stealth, node distance=1.5cm]
+    
+    % Define nodes
+    \foreach \i in {1,...,50} {
+        \node[circle, draw, fill=white!20, scale=1.5] (\i) at (0,0) {\i};
+    }
+    
+    % Draw edges with arrows
+    \foreach \i in {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47} {
+        \draw[->] (1) -- (\i) node[midway, above] {$r_{1\i}$};
+    }
+
+    \foreach \i in {2,...,50} {
+        \foreach \j in {2,...,50} {
+            \pgfmathtruncatemacro{\multiple}{\i*\j}
+            \ifnum\multiple<51
+                \draw[->] (\i) -- (\multiple) node[midway, above] {$r_{\i\multiple}$};
+            \fi
+        }
+    }
+    % Add labels to edges (optional)
+    
+    \end{tikzpicture}
+    \caption{Acyclic digraph of 50 nodes.}
+    \label{fig:50nodes}
+\end{figure*}
+
+
 
 \begin{figure}[thb]
     \begin{center}
     \includegraphics[width=7cm]{IMG/ag_50nodes.png}
-    \caption{Embedding of an acyclic graph with 50 nodes.}
+    \caption{Embedding of an acyclic digraph with 50 nodes.}
     \label{fig:ag_50nodes}
+    \end{center}
+    \vspace{-0mm}
+\end{figure}
+
+\begin{figure}[thb]
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/ug_50nodes.png}
+    \caption{Embedding of an undirected graph with 50 nodes.}
+    \label{fig:ug_50nodes}
+    \end{center}
+    \vspace{-0mm}
+\end{figure}
+
+\begin{figure}[thb]
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/DAGvelocity.png}
+    \caption{Entities in the acyclic digraph, velocity converges to zero.}
+    \label{fig:DAGvelocity}
     \end{center}
     \vspace{-0mm}
 \end{figure}
 
 
 \begin{figure}[thb]
-\begin{center}
-\includegraphics[width=7cm]{IMG/DAGvelocity.png}
-\caption{Entities in the acyclic digraph, velocity converges to zero.}
-\label{fig:DAGvelocity}
-\end{center}
-\vspace{-0mm}
-\end{figure}
-
-
-
-\begin{figure}[thb]
-\begin{center}
-\includegraphics[width=7cm]{IMG/CG_simul3.png}
-\caption{Diverging cyclic digraph composed of 3 entities at $t=10$(s).}
-\label{fig:DCGstate}
-\end{center}
-\vspace{-3mm}
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/CG_simul3.png}
+    \caption{Diverging cyclic digraph composed of 3 entities at $t=10$(s).}
+    \label{fig:DCGstate}
+    \end{center}
+    \vspace{-3mm}
 \end{figure}
 
 \begin{figure}[thb]
-\begin{center}
-\includegraphics[width=7cm]{IMG/DCGvelocity.png}
-\caption{Entities in the cyclic digraph, velocity converges to a nonzero constant.}
-\label{fig:DCGvelocity}
-\end{center}
-\vspace{-0mm}
+    \begin{center}
+    \includegraphics[width=7cm]{IMG/DCGvelocity.png}
+    \caption{Entities in the cyclic digraph, velocity converges to a nonzero constant.}
+    \label{fig:DCGvelocity}
+    \end{center}
+    \vspace{-0mm}
 \end{figure}
 
 %Figs. \ref{fig:DCGstate} and \ref{fig:DCGvelocity} represent the embedding of the cyclic digraph. Entities continue to move, as they cannot realize zero-gradient locations according to \eqref{eq:\mathbf{v}_N}. 
