@@ -392,7 +392,7 @@ The embedding space is represented in \(x\) and \(y\) coordinates, with all enti
     \vspace{-3mm}
 \end{figure}
 
-First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities found their respective embedding points in Fig. \ref{fig:DAGstate}. Entity \(E_1\) retained its initial position as it is the stem node. The remaining four entities selected their positions relative to the anchor point.
+First, we performed the embedding of the graph shown in Fig. \ref{fig:DAG}. The five entities converged to their respective embedding points as illustrated in Fig. \ref{fig:DAGstate}. Entity \(E_1\) remained at its initial position since it is the stem node. The other four entities adjusted their positions relative to this anchor point.
 \begin{equation}\label{eq:result1}
 \begin{split}
     E_2 &= E_1 + r_{12}\\
@@ -402,7 +402,7 @@ First of all, we realized the embedding of Fig. \ref{fig:DAG}. The five entities
 \end{split}
 \end{equation}
 
-The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). We prepared a bigger embedding result of 50 nodes. 
+
 
 \begin{figure*}[h] % 'h' specifies placement (here)
     \centering
@@ -433,8 +433,11 @@ The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). We prepared a bigg
     \label{fig:50nodes}
 \end{figure*}
 
+The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). 
 
+Next, we simulated the embedding of a larger acyclic digraph with 50 nodes, as shown in Fig. \ref{fig:50nodes}. The embedding results are illustrated in Fig. \ref{fig:ag_50nodes}. The entities converged to their respective positions, demonstrating the scalability of our approach.
 
+Finally, we simulated the embedding of an undirected graph with 50 nodes. The embedding results are shown in Fig. \ref{fig:ug_50nodes}. The entities converged to their respective positions, confirming the stability of the embedding process for undirected graphs.
 \begin{figure}[thb]
     \begin{center}
     \includegraphics[width=7cm]{IMG/ag_50nodes.png}
@@ -453,33 +456,33 @@ The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). We prepared a bigg
     \vspace{-0mm}
 \end{figure}
 
-\begin{figure}[thb]
-    \begin{center}
-    \includegraphics[width=7cm]{IMG/DAGvelocity.png}
-    \caption{Entities in the acyclic digraph, velocity converges to zero.}
-    \label{fig:DAGvelocity}
-    \end{center}
-    \vspace{-0mm}
-\end{figure}
+% \begin{figure}[thb]
+%     \begin{center}
+%     \includegraphics[width=7cm]{IMG/DAGvelocity.png}
+%     \caption{Entities in the acyclic digraph, velocity converges to zero.}
+%     \label{fig:DAGvelocity}
+%     \end{center}
+%     \vspace{-0mm}
+% \end{figure}
 
 
-\begin{figure}[thb]
-    \begin{center}
-    \includegraphics[width=7cm]{IMG/CG_simul3.png}
-    \caption{Diverging cyclic digraph composed of 3 entities at $t=10$(s).}
-    \label{fig:DCGstate}
-    \end{center}
-    \vspace{-3mm}
-\end{figure}
+% \begin{figure}[thb]
+%     \begin{center}
+%     \includegraphics[width=7cm]{IMG/CG_simul3.png}
+%     \caption{Diverging cyclic digraph composed of 3 entities at $t=10$(s).}
+%     \label{fig:DCGstate}
+%     \end{center}
+%     \vspace{-3mm}
+% \end{figure}
 
-\begin{figure}[thb]
-    \begin{center}
-    \includegraphics[width=7cm]{IMG/DCGvelocity.png}
-    \caption{Entities in the cyclic digraph, velocity converges to a nonzero constant.}
-    \label{fig:DCGvelocity}
-    \end{center}
-    \vspace{-0mm}
-\end{figure}
+% \begin{figure}[thb]
+%     \begin{center}
+%     \includegraphics[width=7cm]{IMG/DCGvelocity.png}
+%     \caption{Entities in the cyclic digraph, velocity converges to a nonzero constant.}
+%     \label{fig:DCGvelocity}
+%     \end{center}
+%     \vspace{-0mm}
+% \end{figure}
 
 %Figs. \ref{fig:DCGstate} and \ref{fig:DCGvelocity} represent the embedding of the cyclic digraph. Entities continue to move, as they cannot realize zero-gradient locations according to \eqref{eq:\mathbf{v}_N}. 
 
