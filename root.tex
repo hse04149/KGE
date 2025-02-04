@@ -255,10 +255,6 @@ Since the \( n \)-th row is a zero row, it is linearly dependent. Therefore, a v
 
 From Lemma \ref{lemma:p}, we concluded acyclic digraphs always converge.
 
-\begin{theorem}\label{th:DAG_converge}
-If an acyclic digraph satisfies Lemma \ref{lemma:p}, its embedding formation will converge to constant positions.
-\end{theorem}
-
 \begin{proof}
 The stem nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). 
 \begin{equation}\label{eq:0_N}
@@ -266,10 +262,6 @@ The stem nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \).
 \end{equation}
 \end{proof}
 
-
-%Fig. \ref{fig:AG1} is another situation of the ayclic graph which consists of cycles and direct stems. 
-%The node $E_3$ receives a force from $E_4$ then the rows of $L$ cannot keep linear dependence. That will generate a converging effect. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[h] % 'h' specifies placement (here)
 \centering
 \begin{tikzpicture}[>=stealth, node distance=1.5cm]
