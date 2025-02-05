@@ -149,9 +149,9 @@ To adapt TransE for a distributed multi-agent system, we reformulated the optimi
     f_{i}(x_{i}) = \sum_{j \in \mathcal{H}_{i}} \frac{1}{2} \|x_{i} - x_{j} - r_{ji}\|_{2}^{2}
 \end{equation}
 \end{subequations}
-In this context, \( x \in \mathbb{R}^{d \times N} \) denotes the embedding vectors of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) represents the predefined relation from entity \( j \) to entity \( i \).
+In this context, \( x \in \mathbb{R}^{N \times d} \) denotes the embedding space of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) signifies the predefined relation from entity \( j \) to entity \( i \). The objective is to minimize the energy function \( f_i \) for each agent, corresponding to the TransE objective function. We assume that the relation vectors are normalized to unit magnitude and are uni-directed. For simplicity, the embedding space \(x\) is assumed to be a column vector: \(x = [x_1, x_2, \ldots, x_N]^\top\) where \(x_i \in \mathbb{R}\) and \(r_ji \in \mathbb{R}\).
 
-The optimization problem \eqref{eq:min} is tackled using distributed optimization. Each agent focuses on minimizing its local objective function \eqref{eq:f_i}, and through interactions with neighboring agents, they collaboratively aim to achieve the global minimum.
+The optimization problem \eqref{eq:min} is addressed using a distributed optimization approach. Each agent aims to minimize its local objective function \eqref{eq:f_i}. The gradient of \( f_i \) with respect to \( x_i \) is given by:
 \begin{equation}
     p_i = - \pdv{f_{i}}{x_{i}} = - \sum_{j \in \mathcal{H}_i} (x_{i} - x_{j} - r_{ji})
     \label{eq:p}
@@ -163,7 +163,9 @@ The steepest descent direction \( p_i \) guides the optimization process towards
     x_{i}^{t+1} = x_i^t + \alpha p_i(x_i^t)
     \label{eq:update}
 \end{equation}
+
 The step size \( \alpha \) regulates the update speed of agents. Although each agent may have its own local minimum, determining the stabilization of the entire system is challenging. Therefore, we expand \( p_i \) into a vector form:
+
 \begin{equation}
     p = - (Lx - r)
     \label{eq:p_vector}
@@ -182,8 +184,6 @@ In summary, TransE for multi-agent graphs can be seen as an optimization problem
 \subsection{Formation Control with Displacement}
 
 The matrix \( L \) has specific properties, particularly regarding its singularity, which affects the existence of \( x^* \). To verify the system’s convergence, we utilize a method from formation control theory. The update rule in GDM \eqref{eq:update} plays a crucial role. \eqref{eq:update} is reformulated as the \textbf{Euler method} of solving a differential equation with sufficently small time step $h$, \eqref{eq:dis_dynamic} where $k_p = h \alpha < 0$. 
-
-%asdfasdfa
 
 \begin{subequations}\label{eq:fc_law}
 \begin{equation}\label{eq:dis_dynamic}
@@ -217,7 +217,7 @@ Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
     \dot{x} = Te^{k_p Jt}T^{-1} \dot{x}_0
 \]
 
-\noindent where \( L = TJT^{-1} \). The matrix \( L \) has some zero eigenvalues \( \lambda_n = 0 \indent (n = 1,2,...,M) \), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, the solution to \eqref{eq:2dot} approaches such a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \):
+\noindent where \( L = TJT^{-1} \). The matrix \( L \) has \(M\) zero eigenvalues \( \lambda_i = 0 \indent (i = 1,2,...,M) \), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, the solution to \eqref{eq:2dot} approaches such a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \):
 
 \begin{equation}
     \dot{x} \rightarrow (\sum_{n=1}^M q_n e^{-\lambda_n t}p_n^\top) \dot{x}_0 = (\sum_{n=1}^M q_n p_n^\top )\dot{x}_0
@@ -378,7 +378,7 @@ p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
 \section{Simulation}
 We conducted computer simulations of embedding formations for several knowledge graphs. These simulations focus on how agents move over time, providing complementary insights to our main analysis.
 
-The embedding space is composed of \(x\) and \(y\) coordinates, with all entities starting from random initial positions. All relation vectors are predefined and normalized as 1 magnitude. 
+The embedding space is composed of \(x\) and \(y\) coordinates, with all entities starting from random initial positions. The agents update their positions using the Euler method with a step size of \(0.001\). The simulation ends when the agents reach a steady state, where the change in position is negligible. The results are visualized using \textbf{MATLAB}.
 
 \begin{figure}[thb]
     \begin{center}
