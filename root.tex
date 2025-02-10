@@ -223,7 +223,7 @@ Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
     \dot{x}(t) = T e^{k_p J t} T^{-1} \dot{x}_0 
 \]
 
-\noindent The matrix \( J \) has \( M \) zero eigenvalues \( \lambda_i = 0 \) (\( i = 1,2,...,M \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, the solution to \eqref{eq:2dot} approaches a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \):
+\noindent The matrix \( J \) has \( M \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,M \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, the solution to \eqref{eq:2dot} approaches a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}:
 
 \begin{equation}
     \dot{x}(t) \rightarrow \left( \sum_{n=1}^M q_n e^{-\lambda_n t} p_n^\top \right) \dot{x}_0 = \left( \sum_{n=1}^M q_n p_n^\top \right) \dot{x}_0
@@ -231,7 +231,7 @@ Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
 \end{equation}
 
 \noindent The equation \eqref{eq:solution} reminds us that $L$'s column and row null spaces critically impact multi-agent formation. 
-To clarify it, we explore the shapes of the graphs that directly influence the nullity of \( L \). We distinguish between two features of digraphs for KGE problems: \textbf{Stems} and \textbf{Cycles}.
+To clarify it, we explore the shapes of the graphs that directly influence the nullity of \( L \). We distinguish between two features of digraphs that causes zero multiplicity for KGE problems: \textbf{Stems} and \textbf{Cycles}.
 
 A stem acts solely as head entities without any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a stem node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since stems have no incoming edges, the Laplacian matrix \( L \) of graphs with \( m \) stem will have \( m \) zero rows:
 \[
