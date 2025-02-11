@@ -149,7 +149,7 @@ To adapt TransE for a distributed multi-agent system, we reformulated the optimi
     f_{i}(x_{i}) = \sum_{j \in \mathcal{H}_{i}} \frac{1}{2} \|x_{i} - x_{j} - r_{ji}\|_{2}^{2}
 \end{equation}
 \end{subequations}
-In this context, \( x \in \mathbb{R}^{N \times d} \) denotes the embedding space of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) signifies the predefined relation from entity \( j \) to entity \( i \). The objective is to minimize the energy function \( f_i \) for each agent, corresponding to the TransE objective function. We assume that the relation vectors are normalized to unit magnitude and are uni-directed. For simplicity, the embedding space \(x\) is assumed to be a column vector: \(x = [x_1, x_2, \ldots, x_N]^\top\) where \(x_i \in \mathbb{R}\) and \(r_ji \in \mathbb{R}\).
+In this context, \( x \in \mathbb{R}^{N \times d} \) denotes the embedding space of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) signifies the predefined relation from entity \( j \) to entity \( i \). The objective is to minimize the energy function \( f_i \) for each agent. We assumed that the relation vectors are normalized to unit magnitude and are uni-directed. For simplicity, the embedding space \(x\) is assumed to be a column vector: \(x = [x_1, x_2, \ldots, x_N]^\top\) where \(x_i \in \mathbb{R}\) and \(r_ji \in \mathbb{R}\).
 
 The optimization problem \eqref{eq:min} is addressed using a distributed optimization approach. Each agent aims to minimize its local objective function \eqref{eq:f_i}. The gradient of \( f_i \) with respect to \( x_i \) is given by:
 \begin{equation}
@@ -217,13 +217,13 @@ Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
     L = T J T^{-1} 
 \]
 
-\noindent where \( J \) is the Jordan form of \( L \) and \( T \) is the matrix of generalized eigenvectors. Substituting this into the solution, we get:
+\noindent where \( J \) is the Jordan form of \( L \) and \( T \) is the matrix of laplacian eigenvectors and generalized eigenvectors. Substituting this into the solution, we get:
 
 \[ 
     \dot{x}(t) = T e^{k_p J t} T^{-1} \dot{x}_0 
 \]
 
-\noindent The matrix \( J \) has \( M \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,M \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, the solution to \eqref{eq:2dot} approaches a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}:
+\noindent The matrix \( J \) has \( M \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,M \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, only the zero eigenvalues affect the system's stability and convergence \cite{mesbahi_graph_2010}. Therefore, the system will converge to a steady velocity if algebraic multiplicity and geometric multiplicity of zero laplacian eigenvalues are the same. Then, the solution of \eqref{eq:2dot} approaches a constant over time, where \( p_n \) and \( q_n \) are the left and right eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}:
 
 \begin{equation}
     \dot{x}(t) \rightarrow \left( \sum_{n=1}^M q_n e^{-\lambda_n t} p_n^\top \right) \dot{x}_0 = \left( \sum_{n=1}^M q_n p_n^\top \right) \dot{x}_0
