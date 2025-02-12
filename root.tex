@@ -46,6 +46,7 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{remark}{Remark}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{positioning, arrows}
@@ -183,22 +184,23 @@ In summary, TransE for multi-agent graphs can be seen as an optimization problem
 
 \subsection{Formation Control with Displacement}
 
-The matrix \( L \) has specific properties, particularly regarding its singularity, which affects the existence of \( x^* \). To verify the system’s convergence, we utilize a method from formation control theory. The update rule in GDM \eqref{eq:update} plays a crucial role. \eqref{eq:update} is reformulated as the \textbf{Euler method} of solving a differential equation with sufficently small time step $h$, \eqref{eq:dis_dynamic} where $k_p = h \alpha < 0$. 
+The matrix \( L \) has specific properties, particularly regarding its singularity, which affects the existence of \( x^* \). To verify the system’s convergence, we utilize a method from formation control theory. The update rule in GDM \eqref{eq:update} plays a crucial role. 
 
-\begin{subequations}\label{eq:fc_law}
-\begin{equation}\label{eq:dis_dynamic}
-    \dot{x}_i = k_p \sum_{j \in \mathcal{H}_i} (x_{i} - x_{j} - r_{ji})
-\end{equation}
-\begin{equation}\label{eq:total_dynamic}
-    \dot{x} = k_p(Lx - r)
-\end{equation}
-\end{subequations}
+\begin{remark}
+    The update rule \eqref{eq:update} can be interpreted as a discrete-time approximation of the continuous-time dynamics of the system. By analyzing the continuous-time dynamics, we can determine the stability and convergence of the system. The dynamics of the system can be described as:
 
-\noindent \eqref{eq:total_dynamic} is a vector form of \eqref{eq:dis_dynamic}.
+    \begin{equation}\label{eq:dis_dynamic}
+        \dot{x}_i = k_p \sum_{j \in \mathcal{H}_i} (x_{i} - x_{j} - r_{ji})
+    \end{equation}
+    \begin{equation}\label{eq:total_dynamic}
+        \dot{x} = k_p(Lx - r)
+    \end{equation}
+    \noindent \eqref{eq:total_dynamic} is a vector form of \eqref{eq:dis_dynamic}.
+\end{remark}
 
-The dynamics in \eqref{eq:fc_law} is a single integrator control law for displacement-based formation control of digraphs with a Laplacian matrix. As shown by the dynamics, the current state directly influences the rate of change. Thus, the previous distributed optimization problem and the new formation control problem are equivalent. Entities follow the control law \eqref{eq:fc_law}, making it possible to use control theory methods to analyze features of a new embedding system in continuous time.
+The dynamics in \eqref{eq:total_dynamic} is a single integrator control law for displacement-based formation control of digraphs with a Laplacian matrix. As shown by the dynamics, the current state directly influences the rate of change. Thus, the previous distributed optimization problem and the new formation control problem are equivalent. Entities follow the control law \eqref{eq:total_dynamic}, making it possible to use control theory methods to analyze features of a new embedding system in continuous time.
 
-Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
+Given the dynamics \eqref{eq:total_dynamic}, we derived another equation about agent's velocity:
 
 \begin{equation}
     \ddot{x} = k_p L \dot{x}
@@ -219,28 +221,46 @@ Given the dynamics \eqref{eq:total_dynamic}, we derived another equation:
 
 \noindent where \( J \) is the Jordan form of \( L \). \( T \) and \(T^{-1}\) are the matrices of right and left laplacian eigenvectors and generalized eigenvectors. Substituting this into the solution:
 
-\[ 
-    \dot{x}(t) = T e^{k_p J t} T^{-1} \dot{x}_0 
-\]
-
-\noindent The matrix \( J \) has \( m \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,m \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, only the zero eigenvalues affect the system's stability and convergence \cite{mesbahi_graph_2010}. Therefore, the system will converge to a steady velocity if algebraic multiplicity and geometric multiplicity of zero laplacian eigenvalues are the same. Then, the solution of \eqref{eq:2dot} approaches a constant over time, where \( p_n \) and \( q_n \) are the right and left eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}:
 
 \begin{equation}
-    \dot{x}(t) \rightarrow \left( \sum_{n=1}^m p_n e^{-\lambda_n t} q_n^\top \right) \dot{x}_0 = \left( \sum_{n=1}^m p_n q_n^\top \right) \dot{x}_0
-    \label{eq:solution}
+    \dot{x}(t) = T e^{k_p J t} T^{-1} \dot{x}_0 
+    \label{eq:jordan_decom}
 \end{equation}
+\noindent The matrix \( J \) has \( m \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,m \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, only the zero eigenvalues affect the system's stability and convergence \cite{mesbahi_graph_2010}. 
 
-\noindent The equation \eqref{eq:solution} reminds us that the laplacian kernel critically impacts multi-agent formation. 
+%Moreover, velocity of the agents will converge to a steady state if algebraic multiplicity and geometric multiplicity of zero laplacian eigenvalues are the same. 
 
-To clarify it, we explore the shapes of the graphs that produces the zero laplacian eigenvalues. We distinguish between two features of digraphs: \textbf{Roots} and \textbf{Cycles}.
+\subsection{Graph Laplacian Eigenvalues and Stability}
+\begin{remark}
+    When all zero laplacian eigenvalues have a simple \(1 \times 1 \) Jordan block, the velocity of the system will converge to a steady state. 
+\end{remark} 
+
+If 2 or more zero eigenvalues compose a bigger jordan block than \(1 \times 1\), the system will diverge because of nonzero elements on upper triangular part of the block. After the matrix exponential, the system will have polynomial terms of \(t\) which make the system diverge. For example, the matrix exponential of a \(3 \times 3\) Jordan block of zero eigenvalues is:
+\[
+\begin{matrix}
+    \exp{\begin{bmatrix}
+        0 & 1 & 0 \\
+        0 & 0 & 1 \\
+        0 & 0 & 0
+    \end{bmatrix} k_p t} & = & 
+    \begin{bmatrix}
+        1 & k_p t & \frac{1}{2} (k_p t)^2 \\
+        0 & 1 & k_p t \\
+        0 & 0 & 1
+    \end{bmatrix}
+\end{matrix}
+\]
+
+On the right side of the equation, the polynomial terms of \(t\) will not vanish as time passes. Hence, the system velocity will diverge.
+
+Hence, we explored the shapes of the graphs that produces the zero laplacian eigenvalues analyzed them if they have simple jordan blocks or not. We figured out two features of digraphs: \textbf{Roots} and \textbf{SCCs} (Strongly Connected Components).
 
 \subsubsection{Roots}
 A root acts solely as head entities without any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a root node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since roots have no incoming edges, the graph laplacian will have zero rows corresponding to the roots:
-%% 여기에다가 root node에 대한 설명을 쓰면 될 것 같아요.
 
-\begin{lemma}\label{lemma:p}
+\begin{lemma}\label{lemma:q}
 Let the \( z \)-th row of graph laplacian (\( L_z^\top\)) be a zero row. Then the left zero eigenvector \( q \) is given by:
-\begin{equation}\label{eq:DAG_left}
+\begin{equation}\label{eq:q}
     q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top
 \end{equation}
 \noindent where \( \rho_z \) is the \( z \)-th element of \( q \).
@@ -250,68 +270,84 @@ Let the \( z \)-th row of graph laplacian (\( L_z^\top\)) be a zero row. Then th
 \( L_z^\top \) is a zero row so it is linearly dependent. Therefore, we can find \( q \) to solve the equation \( q^\top L = \mathbf{0}_n^\top \). The result is \( q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top \).
 \end{proof}
 
-%% 여기에다가 root node에 대한 설명을 쓰면 될 것 같아요.
-From the definition of jordan decomposition, 
+We applied Lemma \ref{lemma:q} to graph laplacian jordan decomposition. We assumed that the first node of digraph is a root node. Then, the first row of graph laplacian is a zero row and \(T^{-1}\)'s will be \(q = \{1, 0, \dots , 0\}^\top \). 
 
 
+\begin{theorem}
+    Roots in a digraph generate zero laplacian eigenvalues with simple \(1 \times 1\) jordan blocks.
+\end{theorem}
 
+\begin{proof}
+    Let the first row of graph laplacian be a zero row. Then, the left zero eigenvector \( q \) is given by \( q = \{1, 0, \dots , 0\} \) from Lemma \ref{lemma:q}. The jordan form of the graph laplacian is \( L = T J T^{-1} \) where \( T \) is the matrix of right eigenvectors and \( T^{-1} \) is the matrix of left eigenvectors. Since the first row of \( L \) is a zero row, the first row of \( T^{-1} \) is \( q \). 
+    \begin{equation}\label{eq:J_1}
+        J_1^\top = (T^{-1})_1^\top L T = q^\top L T = \mathbf{0}_N^\top T = \mathbf{0}_N^\top
+    \end{equation}
+    \noindent where \( J_1 \) is the first jordan block of \( L \). From \eqref{eq:J_1}, the first jordan block of \( L \) is a simple \(1 \times 1\) jordan block. Although there are other roots in the graph, they also have simple \(1 \times 1\) jordan blocks alike the first root.
+\end{proof}
 
+In conclusion, all roots in a digraph generate zero laplacian eigenvalues that have simple \(1 \times 1\) jordan blocks.
 
+\subsubsection{SCCs}
 
-Nodes within a cycle serve both as head and tail entities. Fig. \ref{fig:DCG} provides a good example of a triangular cycle. All rows of the Laplacian matrix \( L \) have a zero sum, resulting in \( L \) having a one-dimensional kernel. Additionally, the rows are linearly dependent because there are no zero rows.
+Some nodes in a digraph are strongly connected to each other as they are reachable from other nodes. These nodes are called "Strongly Connected Components" (SCC). SCCs form subgraphs, where the nodes are mutually dependent. Fig. \ref{fig:DCG} illustrates an example SCCs forming a triangular cycle, where each node is both a head and a tail entity. The graph laplacian of a cycle has a one-dimensional kernel, resulting in one zero eigenvalue. The rows of the subgraph laplacian are linearly dependent, as there are no zero rows in the subgraph laplacian of SCCs. 
 
+\begin{remark}
+    A strongly connected subgraph in a digraph generates one zero laplacian eigenvalue. Therefore, zero eigenvalues from SCCs have \(1 \times 1\) jordan blocks. However, if a subgraph of SCCs is enforced by roots or other subgraphs of SCCs, its laplacian rows lose linear dependence as it has no zero eigenvalues. We named it as "Rooted SCCs". 
+\end{remark}
+
+Finally, we can rewrite \eqref{eq:jordan_decom} into:
+\begin{equation}
+    \dot{x}(t) \rightarrow \left( \sum_{n=1}^m p_n e^{-\lambda_n t} q_n^\top \right) \dot{x}_0 = \left( \sum_{n=1}^m p_n q_n^\top \right) \dot{x}_0
+    \label{eq:solution}
+\end{equation}
+
+The solution \eqref{eq:solution} approaches a constant over time, where \( p_n \) and \( q_n \) are the right and left eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}. 
+
+\subsection{Convergence Analysis}
 
 Given these features, we organized several cases of graphs for knowledge graph embedding: \textbf{Acyclic Digraphs} and \textbf{Cyclic Digraphs}.
 
+\begin{figure}[h] % 'h' specifies placement (here)
+    \centering
+    \begin{tikzpicture}[>=stealth, node distance=1.5cm]
+    
+    % Define nodes
+    \node[circle, draw, fill=white!20, scale = 1.5] (1) {1};
+    \node[circle, draw, fill=white!20, scale = 1.5, right of=1] (2) {2};
+    \node[circle, draw, fill=white!20, scale = 1.5, below of=2] (3) {3};
+    \node[circle, draw, fill=white!20, scale = 1.5, left of=3] (4) {4};
+    \node[circle, draw, fill=white!20, scale = 1.5, below of=3] (5) {5};
+    
+    % Draw edges with arrows
+    \draw[->] (1) -- (2) node[midway, below] {$r_{12}$};
+    \draw[->] (2) -- (3) node[midway, left] {$r_{23}$};
+    \draw[->] (1) -- (4) node[midway, right] {$r_{14}$};
+    \draw[->] (3) -- (5) node[midway, left] {$r_{35}$};
+    \draw[->] (4) -- (3) node[midway, above] {$r_{43}$};
+    
+    % Add labels to edges (optional)
+    
+    \end{tikzpicture} 
+    \caption{A simple acyclic digraph with 5 nodes.}
+    \label{fig:DAG}
+    \end{figure}
 \subsubsection{Acyclic Digraphs}
 
-We defined an acyclic digraph as having some roots. These roots will strongly stabilize embedding result. Moreover, in cases of acyclic digraph, zero multiplicity of \(L\)'s eigenvalues must equal the number of roots. The following lemma then holds for acyclic digraphs.
+We defined an acyclic digraph as having some roots and rooted SCCs. These roots will strongly stabilize embedding result. 
 
-\begin{lemma}\label{lemma:p}
-Let the \( z \)-th row of graph laplacian (\( L_z^\top\)) be a zero row. Then the left zero eigenvector \( q \) is given by:
-\begin{equation}\label{eq:DAG_left}
-    q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top
-\end{equation}
-\end{lemma}
-\noindent where \( \rho_z \) is the \( z \)-th element of \( q \).
+\begin{theorem}
+    Acyclic digraphs always converge to a steady state.
+\end{theorem}
 
 \begin{proof}
-Since \( L_z^\top = \mathbf{0}_N^\top \), it is linearly dependent. Therefore, we can find \( q \) to solve the equation \( q^\top L = \mathbf{0}_n^\top \). The result is \( q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top \).
-\end{proof}
-
-From Lemma \ref{lemma:p}, we concluded acyclic digraphs always converge.
-
-\begin{proof}
-The root nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). 
+The root nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). Furthermore, from Lemma \ref{lemma:q}, the left eigenvector \( q \) is \( \{1, 0, \dots, 0\} \). Substituting these into \eqref{eq:solution}, we found that the velocities of all agents goes to zero over time. 
 \begin{equation}\label{eq:0_n}
-    \dot{x} \rightarrow \sum_{n=1}^M q_n p_n^\top \dot{x}_0 = \sum_{n=1}^M (q_n \times 0) = \mathbf{0}_n
+    \dot{x} \rightarrow \sum_{n=1}^m p_n q_n^\top \dot{x}_0 = \sum_{n=1}^m (p_n \times 0) = \mathbf{0}_n
 \end{equation}
+This implies that the embedding of the acyclic digraph will converge to a steady state.
 \end{proof}
 
-\begin{figure}[h] % 'h' specifies placement (here)
-\centering
-\begin{tikzpicture}[>=stealth, node distance=1.5cm]
 
-% Define nodes
-\node[circle, draw, fill=white!20, scale = 1.5] (1) {1};
-\node[circle, draw, fill=white!20, scale = 1.5, right of=1] (2) {2};
-\node[circle, draw, fill=white!20, scale = 1.5, below of=2] (3) {3};
-\node[circle, draw, fill=white!20, scale = 1.5, left of=3] (4) {4};
-\node[circle, draw, fill=white!20, scale = 1.5, below of=3] (5) {5};
-
-% Draw edges with arrows
-\draw[->] (1) -- (2) node[midway, below] {$r_{12}$};
-\draw[->] (2) -- (3) node[midway, left] {$r_{23}$};
-\draw[->] (1) -- (4) node[midway, right] {$r_{14}$};
-\draw[->] (3) -- (5) node[midway, left] {$r_{35}$};
-\draw[->] (4) -- (3) node[midway, above] {$r_{43}$};
-
-% Add labels to edges (optional)
-
-\end{tikzpicture} 
-\caption{A simple acyclic digraph with 5 nodes.}
-\label{fig:DAG}
-\end{figure}
 
 \begin{figure}[h]
 \centering
@@ -331,7 +367,7 @@ The root nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \).
 
 
 \end{tikzpicture}
-\caption{A simple cyclic digraph with 3 nodes.}
+\caption{A simple cycle of 3 SCCs.}
 \label{fig:DCG}
 \end{figure}
 
@@ -339,10 +375,10 @@ The root nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \).
 
 \subsubsection{Cyclic Digraphs}
 
-Cyclic digraphs contain no roots to generate zero rows of their graph laplacian. Additionally, since all vertices in a cyclic digraph belong to a spanning tree, only one zero eigenvalue appears. Its corresponding right eigenvector \( q \) is \( \mathbf{1}_n \) \cite{olfati-saber_consensus_2007}. The value \( k \) is arbitrary and satisfies \( p^\top \dot{x}_0 = p^\top (-Lx(0) + r) = p^\top r = v \) (since \( p^\top L = 0 \)). In the case of cyclic digraphs, \eqref{eq:0_n} is replaced by \eqref{eq:v_n}.
+We defined cyclic digraphs that contain no roots and all vertices in a cyclic digraph belong to a spanning tree so that only one zero laplacian eigenvalue appears. Its corresponding right eigenvector \( p \) is \( \mathbf{1}_n \) \cite{olfati-saber_consensus_2007}. \( k \) is arbitary and satisfies \( q^\top \dot{x}_0 = q^\top (-Lx(0) + r) = q^\top r = v \) (since \( q^\top L = 0 \)). In the case of cyclic digraphs, \eqref{eq:0_n} is replaced by \eqref{eq:v_n}.
 
 \begin{equation}\label{eq:v_n}
-    \dot{x} \rightarrow qp^\top \dot{x}_0 = \mathbf{1}_n \times v = \mathbf{v}_n
+    \dot{x} \rightarrow pq^\top \dot{x}_0 = \mathbf{1}_n \times v = \mathbf{v}_n
 \end{equation}
 
 \noindent Every agent in the cyclic graph acquires a uniform velocity \( v \). This behavior is known as \textbf{Velocity Alignment} \cite{dimarogonas_connection_2008}. If \( v = 0 \), the system will converge and the agents will reach \( x^* \). Otherwise, the agents diverge along linear paths:
@@ -366,23 +402,30 @@ To investigate more specifically, we concentrated on \eqref{eq:total_dynamic}. A
 \begin{split}
     \dot{x} &= k_p(Lx - r) \\
    \rightarrow  \mathbf{v}_n &= k_p(L(\mathbf{v}_nt + X) - r) \\
-           &= k_p(LX - r)  \\ \\
+           &= k_p(LX - r)  \\ 
  \therefore X &= L^+ (r - \frac{\mathbf{v}_n}{k_p})
 \end{split}
 \end{equation}
 
-Since \(q=\mathbf{1}_n\) is a right eigenvector of \(\lambda_1 = 0\), only \(X\) has left. We determined \( X \) from \eqref{eq:findX}, where \( + \) denotes the pseudo-inverse because of \( L \)'s singularity. Followings are agent-based equations with respect to \(X\):
 
-\begin{equation}
-    \begin{split}
-    \dot{x}_i &= k_p(\sum_{j \in \mathcal{H}_i} (x_i - x_j) -r_i) \\
-    \rightarrow v &= k_p(\sum_{j \in \mathcal{H}_i} (X_i - X_j) - r_i) \\
-    X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_p})
-    \end{split}
-\end{equation}
+
+Since \(q=\mathbf{1}_n\) is a right eigenvector of \(\lambda_1 = 0\), only \(X\) has left. We determined \( X \) from \eqref{eq:findX}, where \( + \) denotes the pseudo-inverse because the graph laplacian is singular. Followings are agent-based equations with respect to \(X\):
+
+\begin{remark}
+    The embedding results of cyclic digraphs are determined by \(X\), which is the relative formation of the agents. In addition, we orgainzed the relative formation of each agent \(X_i\) as following:
+    \begin{equation}
+        \begin{split}
+        \dot{x}_i &= k_p(\sum_{j \in \mathcal{H}_i} (x_i - x_j) -r_i) \\
+        \rightarrow v &= k_p(\sum_{j \in \mathcal{H}_i} (X_i - X_j) - r_i) \\
+        X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_p})
+        \end{split}
+    \end{equation}
+\end{remark}
+
+
 
 \subsection{Undirectional Embedding} 
-We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are only enforced to move desired relative positions while heads receive no external forces. However, as we already mentioned, the system will be unstable for some cases: cyclic digraphs and graphs that embody uncontrollable cycles. To stabilize the system, we tried a new princeple: undirectional embedding.
+We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are only enforced to move desired relative positions while heads receive no external forces. However, as we already mentioned, the embedding results will diverge for several cases because of unrooted SCCs. To stabilize them, we tried a new princeple: undirectional embedding.
 \begin{equation}
     \dot{x}_i = k_p \sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{ji})
 \end{equation}
@@ -393,10 +436,10 @@ We expand the range of the node's neighbors to include its tails. That makes the
 
 \noindent This condition indicates that the relation vector \( r_{ij} \) is the negative of \( r_{ji} \). The new condition ensures that the system is stable and converges to a steady state.
 
-A connected undirected graphs always has a symmetry graph laplacian that involves only one zero eigenvalue and \( q = 1_n \) \cite{olfati-saber_consensus_2007}. According to (\ref{eq:2dot}) and (\ref{eq:solution}), all agent's velocity also converge to \(p^\top r\) where \(p = 1_n / N \). 
+A connected undirected graphs always has a symmetry graph laplacian that involves only one zero eigenvalue and \( p = 1_n \) \cite{olfati-saber_consensus_2007}. According to \eqref{eq:2dot} and \eqref{eq:solution}, all agent's velocity also converge to \(q^\top r\) where \(q = \mathbf{1}_n / N \). 
 
 \[
-p^\top r = \frac{1}{N} \sum_{i = 1}^N r_i
+q^\top r = \frac{1}{N} \sum_{i = 1}^N r_i = 0
 \]
 
 \noindent Its result is finally zero. (\(\because r_{ji} = -r_{ij}\)). Consequently, undirected knowledge graphs have settled embedding results. 
@@ -412,8 +455,30 @@ The embedding space is composed of \(x\) and \(y\) coordinates, with all entitie
     \caption{A converging acyclic digraph composed of 5 entities.}
     \label{fig:DAGstate}
     \end{center}
-    \vspace{-3mm}
+    \vspace{-0mm}
 \end{figure}
+
+
+
+
+First, we performed the embedding of the graph shown in Fig. \ref{fig:DAG}. The five entities converged to their respective embedding points as illustrated in Fig. \ref{fig:DAGstate}. Entity \(E_1\) remained at its initial position since it is the root node. The other four entities adjusted their positions relative to this anchor point.
+\begin{equation}\label{eq:result1}
+\begin{split}
+    E_2 &= E_1 + r_{12}\\
+    E_3 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2}\\
+    E_4 &= E_1 + r_{14}\\
+    E_5 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2} + r_{35}
+\end{split}
+\end{equation}
+
+
+
+\noindent The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). 
+
+
+Fig. \ref{fig:velo_align} shows the velocity alignment of a cyclic digraph with 3 entities. They initiated with distinct state but gradually made consensus so that the agents may keep moving in parallel. This behavior is a characteristic of cyclic digraphs and demonstrates how the embedding process can be analyzed using formation control principles.
+
+
 
 \begin{figure}[thb]
     \begin{center}
@@ -429,8 +494,11 @@ The embedding space is composed of \(x\) and \(y\) coordinates, with all entitie
     \begin{tikzpicture}[>=stealth, node distance=1.5cm]
     
     % Define nodes
+    % \foreach \i in {1,...,50} {
+    %     \node[circle, draw, fill=white!20, scale=1.5] (\i) at (0,0) {\i};
+    % }
     \foreach \i in {1,...,50} {
-        \node[circle, draw, fill=white!20, scale=1.5] (\i) at (0,0) {\i};
+        \node[circle, draw, fill=white!20, scale=0.5] (\i) at ({360/50 * (\i-1)}:4cm) {\i};
     }
     
     % Draw edges with arrows
@@ -453,6 +521,10 @@ The embedding space is composed of \(x\) and \(y\) coordinates, with all entitie
     \label{fig:50nodes}
 \end{figure*}
 
+
+
+
+
 \begin{figure*}[h]
     \begin{center}
     \begin{subfigure}[b]{0.45\textwidth}
@@ -471,26 +543,9 @@ The embedding space is composed of \(x\) and \(y\) coordinates, with all entitie
     % \vspace{-0mm}
 \end{figure*}
 
+Next, we simulated the embedding of a larger acyclic digraph with 50 nodes, as shown in Fig. \ref{fig:50nodes}. The embedding results are illustrated in Fig. \ref{fig:ag_50nodes}. We have a root node \(E_1\) that influences the other prime number nodes. Moreover the other numbered nodes have a role of heads that enforce their multiples. For example, \(E_2\) is enforced by \(E_1\) and \(E_2\) have out-degree relations to other even numbered nodes: \(E_4, E_6, E_8, \ldots, E_{50}\). Other nodes also have directed relations to their multiples. 
 
-First, we performed the embedding of the graph shown in Fig. \ref{fig:DAG}. The five entities converged to their respective embedding points as illustrated in Fig. \ref{fig:DAGstate}. Entity \(E_1\) remained at its initial position since it is the root node. The other four entities adjusted their positions relative to this anchor point.
-\begin{equation}\label{eq:result1}
-\begin{split}
-    E_2 &= E_1 + r_{12}\\
-    E_3 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2}\\
-    E_4 &= E_1 + r_{14}\\
-    E_5 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2} + r_{35}
-\end{split}
-\end{equation}
-
-
-
-\noindent The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). 
-
-
-
-Fig. \ref{fig:velo_align} shows the velocity alignment of a cyclic digraph with 3 entities. They initiated with distinct state but gradually made consensus so that the agents may keep moving in parallel. This behavior is a characteristic of cyclic digraphs and demonstrates how the embedding process can be analyzed using formation control principles.
-
-Next, we simulated the embedding of a larger acyclic digraph with 50 nodes, as shown in Fig. \ref{fig:50nodes}. The embedding results are illustrated in Fig. \ref{fig:ag_50nodes}. The entities converged to their respective positions, demonstrating the scalability of our approach.
+The embedding results show that all entities converged to their respective positions, confirming the stability of the embedding process for the acyclic digraph.
 
 Finally, we simulated the embedding of an undirected version of the former graph with 50 nodes. The results are shown in Fig. \ref{fig:ug_50nodes}. All entities converged to their respective positions, confirming the stability of the embedding process for the undirected graph.
 
