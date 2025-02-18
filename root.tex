@@ -43,8 +43,8 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 \usepackage[bottom]{footmisc}
 \usepackage{physics}
 \usepackage{amsmath,amsfonts,amssymb}
-% \newtheorem{theorem}{Theorem}[section]
-% \newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
 % \newtheorem{lemma}[theorem]{lemma}
 \newtheorem{remark}{Remark}
 \usepackage{graphicx}
@@ -263,7 +263,14 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 \label{eq:entire_dynamic}
 \end{equation}
 \subsection{Infeasible Embedding}
+
+
 We define infeasible embedding as cases where the given embedding formulation has solutions but does not hold \(\dot{x} = 0\). We can rewrite these cases as \((L \otimes I_d)x - r \neq 0\).
+
+
+\begin{theorem}
+    When, the embedding formulation is infeasible, the system will diverge with non-zero velocities. 
+\end{theorem}
 
 To explain the infeasible cases, we present a simple example of infeasible embedding: a cycle of 3 entities with 3 relations.
 
