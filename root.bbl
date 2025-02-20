@@ -29,4 +29,7 @@ I.~Mirzaev and J.~Gunawardena, ``\BIBforeignlanguage{en}{Laplacian {Dynamics} on
 \bibitem{dimarogonas_connection_2008}
 D.~V. Dimarogonas and K.~J. Kyriakopoulos, ``A connection between formation infeasibility and velocity alignment in kinematic multi-agent systems,'' \emph{Automatica}, vol.~44, no.~10, pp. 2648--2654, Oct. 2008.
 
+\bibitem{niezink_consensus_2011}
+N.~Niezink, ``Consensus in networked multi-agent systems,'' Ph.D. dissertation, Faculty of Science and Engineering, 2011.
+
 \end{thebibliography}

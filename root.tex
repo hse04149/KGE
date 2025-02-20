@@ -45,6 +45,8 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 \usepackage{amsmath,amsfonts,amssymb}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{corollary}{Corollary}[theorem]
+% \theoremstyle{definition}
+\newtheorem{example}{Example}
 % \newtheorem{lemma}[theorem]{lemma}
 \newtheorem{remark}{Remark}
 \usepackage{graphicx}
@@ -142,14 +144,14 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 
 % \subsection{TransE and Distributed Optimization}
 % To adapt TransE for a distributed multi-agent system, we reformulated the optimization problem for each agent in the graph as follows:
-% \begin{subequations}
-% \begin{equation}\label{eq:min}
-%     \min \sum_{i=1}^{N} f_{i} (x_{i})
-% \end{equation}
-% \begin{equation}\label{eq:f_i}
-%     f_{i}(x_{i}) = \sum_{j \in \mathcal{H}_{i}} \frac{1}{2} \|x_{i} - x_{j} - r_{ji}\|_{2}^{2}
-% \end{equation}
-% \end{subequations}
+
+\begin{equation}\label{eq:min}
+    \min \sum_{i=1}^{N} f_{i} (x_{i})
+\end{equation}
+\begin{equation}\label{eq:f_i}
+    f_{i}(x_{i}) = \sum_{j \in \mathcal{H}_{i}} \frac{1}{2} \|x_{i} - x_{j} - r_{ji}\|_{2}^{2}
+\end{equation}
+
 % In this context, \( x \in \mathbb{R}^{N \times d} \) denotes the embedding space of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) signifies the predefined relation from entity \( j \) to entity \( i \). The objective is to minimize the energy function \( f_i \) for each agent. We assumed that the relation vectors are normalized to unit magnitude and are uni-directed. For simplicity, the embedding space \(x\) is assumed to be a column vector: \(x = [x_1, x_2, \ldots, x_n]^\top\) where \(x_i \in \mathbb{R}\) and \(r_ji \in \mathbb{R}\).
 
 % The optimization problem \eqref{eq:min} is addressed using a distributed optimization approach. Each agent aims to minimize its local objective function \eqref{eq:f_i}. The gradient of \( f_i \) with respect to \( x_i \) is given by:
@@ -254,25 +256,14 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 % On the right side of the equation, the polynomial terms of \(t\) will not vanish as time passes. Hence, the system velocity will diverge.
 
 % Hence, we explored the shapes of the graphs that produces the zero laplacian eigenvalues analyzed them if they have simple jordan blocks or not. We figured out two features of digraphs: \textbf{Roots} and \textbf{SCCs} (Strongly Connected Components).
-
-
-\section{Main Result 2}
-
 \begin{equation}
     \dot{x} = -k_p(L \otimes I_d x - r)
 \label{eq:entire_dynamic}
 \end{equation}
+
+\section{Main Result 2}
 \subsection{Infeasible Embedding}
-
-
-We define infeasible embedding as cases where the given embedding formulation has solutions but does not hold \(\dot{x} = 0\). We can rewrite these cases as \((L \otimes I_d)x - r \neq 0\).
-
-
-\begin{theorem}
-    When, the embedding formulation is infeasible, the system will diverge with non-zero velocities. 
-\end{theorem}
-
-To explain the infeasible cases, we present a simple example of infeasible embedding: a cycle of 3 entities with 3 relations.
+We define infeasible embedding as cases where the given embedding formulation has solutions but does not hold \(\dot{x} = 0\). We can rewrite these cases as \((L \otimes I_d)x - r \neq 0\). To explain the infeasible cases, we present a simple example of infeasible embedding: a cycle of 3 entities with 3 relations.
 
 \begin{figure}[h]
 \centering
@@ -290,36 +281,89 @@ To explain the infeasible cases, we present a simple example of infeasible embed
 
 % Add labels to edges (optional)
 \end{tikzpicture}
-\caption{A cycle of 3 SCCs.}
+\caption{A cycle of 3 nodes.}
 \label{fig:cycle}
 \end{figure}
 
-All nodes of the cycle in Fig. \ref{fig:cycle} are strongly connected so they can reach each other. Therefore, the graph Laplacian \(L \) of the cycle has one zero eigenvalue \cite{olfati-saber_consensus_2007}.
+\begin{example}\label{ex:cycle}
+    All nodes of the cycle in Fig. \ref{fig:cycle} are strongly connected, so they can reach each other. Therefore, the graph Laplacian \(L\) of the cycle has one zero eigenvalue \cite{olfati-saber_consensus_2007}.
+\end{example}
 
-To analyze convergence of the system, we can derive the second derivative of \(x\) from \eqref{eq:entire_dynamic}:
+
+
+To analyze the convergence of Example \ref{ex:cycle}, we can derive the second derivative of \(x\) from \eqref{eq:entire_dynamic}:
 
 \begin{equation}\label{eq:2dot}
     \ddot{x} = -k_p L \dot{x}
 \end{equation}
 \noindent We assumed \(d = 1\) for simplicity then the equation \eqref{eq:2dot} has a solution: \( \dot{x}(t) = e^{-k_p Lt} \dot{x}_0 \). 
 
-This solution is applied to the cycle in Fig. \ref{fig:cycle}. Its graph laplacian has one zero eigenvalue, so \(\dot{x}\) will converge to a steady state as time passes \cite{mirzaev_laplacian_2013}:
+This solution is applied to the cycle in Fig. \ref{fig:cycle}. Its graph Laplacian has one zero eigenvalue, so \(\dot{x}\) will converge to a steady state as time passes \cite{mirzaev_laplacian_2013}.
 
 \begin{equation}\label{eq:pqx0}
     \lim_{t \to \infty} \dot{x}(t) = pq^\top \dot{x}_0
 \end{equation}
-\noindent where \( p \) and \( q \) are the right and left eigenvectors of \(L\) corresponding to the zero eigenvalue. \(p\) is all ones vector where \(p^\top q = 1\) \cite{olfati-saber_consensus_2007}. 
+\noindent where \( p \) and \( q \) are the right and left eigenvectors of \(L\) corresponding to the zero eigenvalue. \(p\) is an all-ones vector where \(p^\top q = 1\) \cite{olfati-saber_consensus_2007}. The right side of \eqref{eq:pqx0} is also a solution of the distributed optimization problem \eqref{eq:min}.
 
-As \(\dot{x}_0 = -k_p(Lx_0 - r)\), we can substitute \(\dot{x}_0\) into \eqref{eq:pqx0} to get the steady state of \(\dot{x}\):
+As \(\dot{x}_0 = -k_p(Lx_0 - r)\), we substituted \(\dot{x}_0\) into \eqref{eq:pqx0} to get the steady state of \(\dot{x}\):
 
 \begin{equation}\label{eq:steady}
-    \dot{x} \rightarrow    q^\top (-k_p (Lx -r))\mathbf{1}_N
-    = k_p q^\top r \mathbf{1}_N
+    \dot{x} \rightarrow    q^\top (-k_p (Lx -r))\mathbf{1}
+    = k_p q^\top r \mathbf{1}
 \end{equation}
 
-\noindent Since \(q^\top L = 0\), we figured out all nodes in the cycle will converge to the same velocity \(k_p q^\top r\). If \(q^\top r = 0\), the formulation embedding is feasible. Otherwise, It is infeasible and the system will converge to a non-zero velocity \cite{dimarogonas_connection_2008}. 
+\noindent Since \(q^\top L = 0\), we determined that all nodes in the cycle will converge to the same velocity \(k_p q^\top r\). If \(q^\top r = 0\), the embedding formulation is feasible. Otherwise, it is infeasible, and the cycle's derivative will converge to a non-zero velocity \(v = k_p q^\top r\), a phenomenon known as 'velocity alignment' \cite{dimarogonas_connection_2008}.
+
+From \eqref{eq:pqx0}, we found that zero eigenvalues of the graph Laplacian are crucial in determining whether the embedding formulation is feasible or not. There are two features of digraphs that induce zero eigenvalues: \textbf{Roots} and \textbf{Root Sets} \cite{niezink_consensus_2011}. Roots are nodes that have no incoming edges, resulting in zero rows in the graph Laplacian and zero eigenvalues. However, they keep their initial positions without any movement. Therefore, roots are not related to embedding infeasibility.
+
+Root sets consist of strongly connected components (SCCs) and have no incoming edges from outside. Similar to Example \ref{ex:cycle}, a subgraph of root sets generates one zero eigenvalue and non-zero rows in the graph Laplacian. Therefore, they are related to embedding infeasibility.
+
+\begin{remark}
+    If root sets are given infeasible embedding formation, the system will diverge with non-zero velocities.
+\end{remark}
+
+\subsection{Analysis of Infeasible Embedding}  
+Root sets containing infeasible embeddings gradually diverge with non-zero velocities. However, their movement is not chaotic but aligned in the same direction. We have already examined the velocity alignment of the root sets. Hence, we can state the following theorem:
+
+\begin{theorem}
+    Assume that the given digraph is a root set and its embedding formation is infeasible. Then, nodes of the root set will maintain their relative positions to each other while moving in the same direction with a non-zero velocity.
+\end{theorem}
+
+\begin{proof}
+    From \eqref{eq:steady}, the velocity of the root set will be \(\mathbf{v} = k_p q^\top r \mathbf{1}\): \(x_{ss} = \mathbf{v} t + X \) where \(x_{ss}\) is the steady state of the root set, \(X\) is the integration constant, and \(t\) is the time.  
+
+    Therefore, the relative displacements between \(x_i\) and \(x_j\) in the root set will be constant: \(x_{ss_i} - x_{ss_j} = X_i - X_j\). 
+\end{proof}
+
+For further investigation, we concentrated on the dynamics \eqref{eq:entire_dynamic} of the root set. We can rewrite the equation as:
+
+\begin{equation}
+    \mathbf{v} = -k_p L (x_{ss} - r) = -k_p (L X - r)
+    \label{eq:velocity}
+\end{equation}
+
+\noindent since \(L x_{ss} = L(\mathbf{v}t + X) = LX\).
 
 
+Reorganizing \eqref{eq:velocity} with respect to \(X\):
+\begin{equation}
+    X = L^{+} \left( r - \frac{\mathbf{v}}{k_p} \right)
+    \label{eq:X}
+\end{equation}
+
+\noindent where \(L^{+}\) is the Moore-Penrose pseudoinverse of \(L\) because of graph laplacian's singularity.
+
+\begin{remark}
+    The integration constant \(X\) of the root set is determined by the velocity \(\mathbf{v}\) and the relation vectors \(r\).
+\end{remark}
+
+Moreover, \eqref{eq:X} can be represented for each agent. The integration constant \(X_i\) of the \(i\)-th agent is:
+\begin{equation}
+    X_i = \frac{1}{|H_i|} \left( \sum_{j \in H_i} X_j + r_{i} - \frac{\mathbf{v}}{k_p} \right)
+    \label{eq:X_i}
+\end{equation}
+
+\noindent where \(|H_i|\) is the number of heads of the \(i\)-th agent. We can derive the relative formation of the cycle to apply \eqref{eq:X_i} to Example \ref{ex:cycle}. We will simulate the relative formation of the cycle in section 3. 
 
 % \subsubsection{Roots}
 % A root acts solely as head entities without any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a root node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since roots have no incoming edges, the graph laplacian will have zero rows corresponding to the roots:
