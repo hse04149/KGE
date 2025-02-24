@@ -83,62 +83,22 @@ Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspect
 
 % The remainder of this paper is structured as follows: Section 2 provides the necessary preliminaries on graph theory and the TransE model. Section 3 presents our main results, illustrating the correspondence between KGE and formation control through both theoretical analysis and simulation. Finally, Section 4 concludes the paper with a discussion of the implications of our findings and potential directions for future research.
 
-% \section{Preliminaries}
-% This section introduces the essential concepts and mathematical tools that underpin our main results. We cover the basics of TransE, distributed optimization, and formation control, which will be used to derive our conclusions in the subsequent sections.
+\section{Preliminaries}
+We present preliminary results that will be used in the following sections. We summarize algebraic graph theory and knowledge graph embedding. Then we state the formation control problem.
 
-% \subsection{Graph Theory}
+\subsection{Graph theory}
 
-% Graph theory forms the foundation for modeling and analyzing the interactions and relationships in both knowledge graphs and multi-agent systems. In this work, we leverage graph theoretical concepts to unify the fields of Knowledge Graph Embedding (KGE) and formation control.
+A directed graph (or graph) ${G} = ({V}, {E}, W)$ consists of a set of nodes ${V} = \{ 1, \ldots, N \}$, a set of edges ${E} \subset \{ (i, j): i, j \in {V}, i \not =  j \}$, where an edge is an ordered pair of distinct nodes, and a weight matrix $W = [w_{ij}] \in \mathbb{R}^{N \times N}$, which is a nonnegative matrix such that $w_{ij} > 0$ if and only if $(j,i) \in {E}$. If $(i, j)$ is an edge of ${G}$, $i$ is a parent node of $j$ and $j$ is a child node of $i$. The set of neighbors of node $i$ in ${G}$ is defined as ${N}_{i} = \{ j: (j,i) \in {E} \}$. If $(i,j) \in {E}$ implies $(j,i) \in {E}$, ${G}$ is called undirected. % The in-valency of node $i$ is the number of nodes in ${N}_{i}$.
+A subgraph ${G}_{s} = ({V}_{s}, {E}_{s})$ of ${G}$ is a graph such that ${V}_{s} \subseteq {V}$ and ${E}_{s} \subseteq {E}$. If ${V}_{s} = {V}$, ${G}_{s}$ is called a spanning subgraph of ${G}$. A tree is a graph such that every node except for a node called the root has exactly one parent. A spanning tree of ${G}$ is a tree that is a spanning subgraph of ${G}$. The Laplacian matrix $L = [l_{ij}] \in \mathbb{R}^{N \times N}$ of a graph ${G}$ is defined as
 
-% A \textbf{graph} \( G = (V, E) \) consists of a set of vertices \( V \) (or nodes) and a set of edges \( E \) that connect pairs of vertices. Each edge \( e \in E \) is an ordered pair \( (v_i, v_j) \), where \( v_i, v_j \in V \). In a \textbf{directed graph} (or digraph), edges have a direction, pointing from one vertex (the head) to another (the tail).
+\begin{align}
+l_{ij} = \left \{ \begin{array}{ll}
+\sum_{j \in {N}_{i}} w_{ij}, & i=j, \\
+-w_{ij},  & (j,i) \in {E},  \\
+0, & \mathrm{otherwise}.
+\end{array}	\right.	\nonumber
+\end{align}
 
-% \subsubsection{Adjacency Matrix}
-
-% The \textbf{adjacency matrix} \( A \) of a graph \( G \) is a matrix where \( A_{ij} = 1 \) if there is a directed edge from vertex \( v_i \) to vertex \( v_j \), and \( A_{ij} = 0 \) otherwise. The adjacency matrix is crucial in representing the connectivity and structure of the graph, which directly impacts the behavior of vertices.
-
-% \subsubsection{Laplacian Matrix}
-
-% The \textbf{Laplacian matrix} \( L \) is derived from the adjacency matrix and plays a key role in understanding the graph's attributes \cite{mirzaev_laplacian_2013}. For a directed graph, the \textbf{in-degree Laplacian matrix} \( L \) is defined as:
-
-% \[
-% L = D - A
-% \]
-
-% \noindent where \( D \) is the diagonal matrix of in-degrees, with each diagonal element \( D(i, i) \) is equal to the in-degree of vertex \( v_i \), the number of edges directed towards \( v_i \).
-
-% \noindent The Laplacian matrix is fundamental in analyzing the dynamics of multi-agent systems, particularly in formation control, where it governs how agents influence each other based on the underlying graph structure.
-
-% In our work, $L$ is used to describe the linear couplings between entities in the knowledge graph. By analyzing the eigenvalues and eigenvectors $L$, we can infer whether the system converges to a stable solution or diverges in the embedding space.
-
-% \subsection{TransE}
-% TransE \cite{bordes_translating_2013} is a popular method for knowledge graph embedding that manages entities as vectors in a continuous space. Let $\mathcal{G} = (\mathcal{E}, \mathcal{R})$ be a knowledge graph where $\mathcal{E}$ is the set of entities and $\mathcal{R}$ is the set of relations. Given a triple $(h, r, t)$, where $h \in \mathcal{E}$ is the head entity, $t \in \mathcal{E}$ is the tail entity, and $r \in \mathcal{R}$ is the relation, TransE embeds $h$, $r$, and $t$ as vectors in $\mathbb{R}^d$ such that:
-% \[
-% \mathbf{h} + \mathbf{r} \approx \mathbf{t}
-% \]
-% Here, $\mathbf{h}$, $\mathbf{r}$, and $\mathbf{t}$ are the embedding vectors of $h$, $r$, and $t$, respectively. The objective function to minimize is typically formulated as:
-% \[
-% L(\mathcal{G}) = \sum_{(h,r,t) \in \mathcal{G}} \|\mathbf{h} + \mathbf{r} - \mathbf{t}\|_2^2
-% \]
-
-% This energy function drives the model to learn embeddings where the relational structure is preserved in the vector space. 
-
-% \subsection{Distributed Optimization}
-% In a distributed optimization framework, we consider a network of $N$ agents, where each agent $i$ has access to a local objective function $f_i(x_i)$ and interacts only with its neighboring agents in a communication graph. The global optimization problem is given by:
-% \[
-% \min \sum_{i=1}^{N} f_i(x_i)
-% \]
-% Each agent aims to minimize its own objective while exchanging information with neighboring agents to achieve a global consensus \cite{nedic_distributed_2009}. Distributed optimization is well-suited for large-scale systems where centralized optimization is impractical due to communication or computational constraints.
-
-% In this work, we interpret the TransE objective function as a distributed optimization problem where each agent corresponds to an entity in the knowledge graph and interacts with its neighbors via relation-specific and uni-directed interactions. The goal of each agent is to minimize the local objective derived from the TransE energy function while collectively achieving an embedding that satisfies the global structure of the knowledge graph.
-
-% \subsection{Formation Control}
-% Formation control is a widely studied problem in multi-agent systems where the goal is to drive a group of agents to achieve and maintain a desired formation \cite{oh_survey_2015}. The control law typically depends on the relative positions of the agents and can be written as:
-% \[
-% \dot{x}_i = k_p\sum_{j \in \mathcal{N}_i} (x_i - x_j - d_{ji})
-% \]
-% where $x_i$ is the position of agent $i$, $\mathcal{N}_i$ is the set of neighbors of agent $i$, and $d_{ij}$ is the desired relative displacement between agents $i$ and $j$. $k_p$ is a negative proportional gain of control law. The dynamics ensure agents converge to a formation that satisfies the specified relative displacements.
-
-% In the context of TransE, we draw an analogy between formation control and distributed optimization. The update rule for each agent in the optimization process can be viewed as a control law that governs the motion of entities in the embedding space. By leveraging tools from formation control theory, we can analyze the stability and convergence of the embedding process.
 
 % \section{Main Result}
 
