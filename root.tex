@@ -1,680 +1,758 @@
-\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+%===============================================================================
+% ifacconf.tex 2022-02-11 jpuente  
+% 2022-11-11 jpuente change length of abstract
+% Template for IFAC meeting papers
+% Copyright (c) 2022 International Federation of Automatic Control
+%===============================================================================
+\documentclass{ifacconf}
 
-%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+\usepackage{natbib}        % required for bibliography
 
-\IEEEoverridecommandlockouts                              % This command is only needed if 
-                                                          % you want to use the \thanks command
-
-\overrideIEEEmargins                                      % Needed to meet printer requirements.
-
-%In case you encounter the following error:
-%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
-%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
-%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
-%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
-%\pdfobjcompresslevel=0
-%\pdfminorversion=4
-
-% See the \addtolength command later in the file to balance the column lengths
-% on the last page of the document
-
-% The following packages can be found on http:\\www.ctan.org1
-%\usepackage{graphics} % for pdf, bitmapped graphics files
-%\usepackage{epsfig} % for postscript graphics files
-%\usepackage{mathptmx} % assumes new font selection scheme installed
-%\usepackage{times} % assumes new font selection scheme installed
-%\usepackage{amsmath} % assumes amsmath package installed
-%\usepackage{amssymb}  % assumes amsmath package installed
-
-\title{\LARGE \bf
-Knowledge Graph Embedding in Multi-Agent Systems: A Distributed Control Perspective
-}
-
-
-\author{Sang-Won Kang${}^{1}$ and Hyo-Sung Ahn${}^{1*}$% <-this % stops a space
-\thanks{*This work was not supported by any organization}% <-this % stops a space
-\thanks{$^{1}$ School of Mechanical Engineering, Gwangju Institute of Science and Technology (GIST), Gwangju, Korea. 
-        {\tt\small tony9707@gm.gist.ac.kr; hyosung@gist.ac.kr}}%
-}
-
-\usepackage{diagbox}
-\usepackage{subcaption}
-\usepackage{siunitx} % For units in tables
-\usepackage[bottom]{footmisc}
-\usepackage{physics}
-\usepackage{amsmath,amsfonts,amssymb}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{corollary}{Corollary}[theorem]
-% \theoremstyle{definition}
-\newtheorem{example}{Example}
-% \newtheorem{lemma}[theorem]{lemma}
-\newtheorem{remark}{Remark}
-\usepackage{graphicx}
+% \usepackage[colorlinks,citecolor=blue]{hyperref}
+% \usepackage{natbib}
+\usepackage{mathtools}
+\usepackage{mathbbol}
+\usepackage{array}
 \usepackage{tikz}
-\usetikzlibrary{positioning, arrows}
-\usetikzlibrary{arrows.meta}
-\tikzset{mynode/.style={draw, very thick, circle, minimum size=1cm},
-    myarrow/.style={very thick, -Triangle}}
-% \usetikzlibrary{graphs, graphdrawing, arrows.meta}
-% \usegdlibrary{force}
+\usepackage{verbatim}
+\usepackage{moreverb}
+\usepackage{graphics} % for pdf, bitmapped graphics files
+% \usepackage{graphicx}
+% \usepackage{subcaption}
+\usepackage{times}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{lineno}
+% \usepackage{picins}
+% \usepackage{kotex}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs,siunitx}
+\usepackage{algorithm} 
+\usepackage{algorithmicx} 
+\usepackage{algpseudocode}
+% \usepackage{ulem}
+%===============================================================================
 
+\newtheorem{definition}{Definition}[section]
+\newtheorem{problem}{Problem}[section]
+\newtheorem{observation}{Observation}[section]
+\newtheorem{remark}{Remark}[section]
+\newtheorem{lemma}{Lemma}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
+\newtheorem{assumption}{Assumption}[section]
+\newtheorem{suggestion}{Suggestion}[section]
+% \newtheorem{example}{Example}
 
+%% \newcommand{\dim}{\operatornamewithlimits{dim}}
+\newcommand{\diag}{\operatornamewithlimits{diag}}
+%\newcommand{\Arg}{\operatornamewithlimits{Arg}}
+%\newcommand{\dist}{\operatornamewithlimits{dist}}
+%\newcommand{\PV}{\operatornamewithlimits{PV}}
+%\newcommand{\Pa}{\operatornamewithlimits{Proj}}
+%\newcommand{\Proj}{\operatornamewithlimits{Proj}}
+%\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+%\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+%\newcommand{\rank}{\operatornamewithlimits{rank}}
+%\newcommand{\indeg}{\operatornamewithlimits{in-deg}}
+%\newcommand{\outdeg}{\operatornamewithlimits{out-deg}}
+%\newcommand{\degree}{\operatornamewithlimits{deg}}             
+% \renewcommand{\underline}[1]{#1}
 
 \begin{document}
+\begin{frontmatter}
 
-% \maketitle
 
-\thispagestyle{empty}
-\pagestyle{empty}
+\title{Formation Graph Embedding with Consideration of Infeasility\thanksref{footnoteinfo}} 
+% Title, preferably not more than 10 words.
+
+\thanks[footnoteinfo]{This work was supported by Korea Institute of Planning and Evaluation for Technology in Food, Agriculture and Forestry(IPET) through High Value-added Food Technology Development Program, funded by Ministry of Agriculture, Food and Rural Affairs(MAFRA)(RS-2022-IP322054).}
+
+\author[First]{Sang-Won Kang} 
+\author[First]{Hyo-Sung Ahn} 
+\author[Second]{Kwang-Kyo Oh}
+
+\address[First]{Department of Mechanical and Robotics Engineering, Gwangju Institute of Science and Technology(GIST), Gwangju, 61005, Republic of Korea, (e-mail:tony9707@gm.gist.ac.kr, hyosung@gist.ac.kr)}
+\address[Second]{Department of Electrical Engineering, Sunchon National University, Sunchon, Republic of Korea, (e-mail:kkoh@scnu.ac.kr)}
+% \address[Third]{Electrical Engineering Department, 
+%    Seoul National University, Seoul, Korea, (e-mail: author@snu.ac.kr)}
+
+\begin{abstract}                % Abstract of 50--100 words
+This paper studies formation control of single-integrator nodes. Inspired by knowledge graph embedding, we formulate displacement-based formation control within a unified formation graph embedding (FGE) framework and show that existing control laws can be derived using distributed optimization techniques. We define the feasibility of FGEs based on whether the desired formation constraints are realizable and analyze the system's behavior when displacement-based FGE is infeasible. Our theoretical results identify conditions for specific motion patterns under infeasibility, which are validated through numerical simulations. This study provides a unified perspective on formation control and enhances understanding of multi-agent coordination under infeasibility.
+\end{abstract}
+
+\begin{keyword}
+Formation control, graph embedding, formation configuration, displacement-based control.
+\end{keyword}
+
+\end{frontmatter}
+%===============================================================================
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \begin{abstract}
-% This paper proposes a novel framework that integrates Knowledge Graph Embedding (KGE) with distributed optimization and formation control in multi-agent systems. By focusing on TransE, we reformulate its optimization problem using the in-degree Laplacian matrix and distributed control theory, allowing agents to represent entities in the knowledge graph and interact only with neighboring entities. This framework offers a new perspective on embedding methods in decentralized environments and provides a foundation for future research in applying formation control to complex network structures. 
-% \end{abstract}
+\section{Introduction}
+
+% Over the past two decades, formation control has been a subject of extensive research due to its theoretical significance and diverse practical applications. It involves coordinating multiple mobile agents, such as robots, drones, or autonomous vehicles, to maintain a prescribed geometric configuration while navigating or executing tasks. The fundamental challenge is to regulate the positions and orientations of agents using only local sensing and communication mechanisms.
+
+% As highlighted in \cite{oh2015survey}, formation control strategies can be broadly categorized into displacement-based and distance-based approaches. The displacement-based method relies on controlling the relative positions of neighboring agents. In contrast, the distance-based approach ensures that agents preserve predefined inter-agent distances using only local measurements, which often results in a more decentralized control structure.
+
+Displacement-based formation control has been extensively studied due to its advantages in balancing sensing requirements and communication constraints. Unlike distance-based control, displacement-based control enables agents to regulate their relative positions with respect to their local coordinate frames while assuming orientation alignment across the agents. This approach eliminates the need for global positioning systems and simplifies the implementation of distributed formation control. Furthermore, it ensures robustness to environmental disturbances and communication failures while providing a moderate level of decentralization compared to position- and distance-based approaches \citep{oh2015survey}.
+
+Due to these advantages, a significant amount of research has focused on displacement-based formation control. Theoretical developments have analyzed its application to various agent dynamics, including single-integrator \citep{jadbabaie2003coordination, ren2005consensus}, double-integrator \citep{ren2007distributed}, and general linear systems \citep{fax2004information}. The feasibility of achieving desired formations has been studied using graph-theoretic methods, particularly in terms of connectedness and the existence of spanning trees \citep{ren2005consensus}. Stability analysis has been conducted for both static and time-varying interaction graphs, demonstrating that uniform connectedness is a sufficient condition for ensuring asymptotic convergence \citep{moreau2005stability, lin2007state}. Additionally, practical issues such as maintaining connectivity under limited sensing ranges \citep{ji2007distributed} and ensuring formation transitions \citep{ren2007distributed} have been addressed.
+% Extensions to nonholonomic agents, such as unicycles, have also been explored, showing that desired formations can be achieved despite kinematic constraints \citep{dimarogonas2003decentralized}.
+
+While displacement-based formation control has been extensively studied, most existing research has focused on cases where the constraints on relative positions required to achieve a given formation are feasible. In contrast, studies addressing the behavior of the system when these constraints are infeasible have been limited to a few works, such as \cite{dimarogonas2007further, dimarogonas2008connection}. Motivated by this gap, this paper investigates the effects of infeasibility in displacement-based formation control, specifically examining the system's behavior when the relative position constraints defining the desired formation cannot be satisfied.
+
+The main contributions of this paper are twofold. First, inspired by knowledge graph embedding, we formulate formation control problems within the framework of graph embedding. In particular, we introduce the concept of formation graph embedding to represent formation control problems and define the feasibility of a formation graph embedding based on whether the formation constraints can be satisfied. Second, we analyze the behavior of the formation control system when the formation graph embedding is infeasible. Specifically, we theoretically establish conditions under which the node velocities converge to a common value and conditions under which the nodes converge to stationary points. While \cite{dimarogonas2007further, dimarogonas2008connection} addressed the issue of infeasibility under the assumption that the graph is balanced, we consider a more general setting in this paper. Furthermore, unlike \cite{dimarogonas2007further, dimarogonas2008connection}, we demonstrate that the nodes can maintain their relative positions while moving at a common velocity. Finally, numerical simulations validate the theoretical findings and confirm the accuracy of our analysis.
+
+% This paper is organized as follows. In Section \ref{sec_prelim}, we summarize algebraic graph theory and knowledge graph embedding. In Section \ref{sec_formulation}, we formulate displacement- and distance-based formation control problems from the perspective of graph embedding. Further, we show that formation control laws for single-integrator agents can be obtained by solving the graph embedding problems through distributed optimization. We then focus on displacement-based formation control when the desired relative positions are not feasible in Section \ref{sec_infeasible}. We provide simulation results in Section \ref{sec_simulation} and conclude the paper in Section \ref{sec_conclusion}. 
+
+% This paper is organized as follows. In Section \ref{sec_prelim}, we summarize algebraic graph theory and knowledge graph embedding. In Section \ref{sec_formulation}, we formulate displacement-based formation control problems from the perspective of graph embedding. Further, we show that formation control laws for single-integrator agents can be obtained by solving the graph embedding problems through distributed optimization. We then focus on displacement-based formation control when the desired relative positions are not feasible in Section \ref{sec_infeasible}. We provide simulation results in Section \ref{sec_simulation} and conclude the paper in Section \ref{sec_conclusion}. 
 
 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \section{Introduction}
-% Knowledge Graph Embedding (KGE) has emerged as a powerful method for representing entities and relations in a continuous vector space. By embedding knowledge graphs, various downstream tasks such as link prediction, entity classification, and relation extraction are greatly enhanced \cite{wang_knowledge_2017}. Among the KGE techniques, TransE \cite{bordes_translating_2013} is one of the most popular and simplest methods, where relations between entities are modeled as translations in the embedding space. Despite its simplicity, TransE has performed remarkably in various knowledge graph tasks.
+% \section{Preliminaries} \label{sec_prelim}
+% We summarize algebraic graph theory and knowledge graph embedding. The following notations are used throughout the paper. we denote the set of real numbers by $\mathbb{R}$. An $n$-dimensional column vector with ones is denoted by $\mathbf{1}_{n}$, i.e., $\mathbf{1}_{n} = [1 \cdots 1]^{T} \in \mathbb{R}^{n}$. The $n \times n$ identity matrix is denoted by $I_n$. { The $n \times m$ zero matrix is denoted by $\mathbf{0}_{n \times m}$. If there is no confusion, matrices with zeros (zeros) are denoted by $\mathbf{0}$ ($\mathbf{1}$).} For a matrix $A$, $A^{T}$ denotes the transpose of $A$. The spectrum of a square matrix $A$ is denoted by $\sigma(A)$. For two matrices $A$ and $B$, $A \otimes B$ denotes the Kronecker product of $A$ and $B$. For two sets ${A}$ and ${B}$, % the difference $\mathcal{A} - \mathcal{B}$ is denoted by 
+% ${A} \backslash {B}$ denotes the set of elements that are in ${A}$ but not in ${B}$. For a set $A$, $|A|$ denotes the cardianlity of $A$.
 
-% However, as the size and complexity of knowledge graphs grow, it becomes important to distribute the learning process among multiple agents, especially when dealing with decentralized or multi-agent systems. In such cases, traditional centralized optimization techniques may not be feasible. To address this, distributed optimization methods have gained significant attention in recent years. Distributed optimization allows each agent to focus on local objectives while collectively contributing to the global solution \cite{yang_survey_2019}. This makes it suitable for scenarios where agents have limited knowledge of the global network.
 
-% In this work, we propose a novel approach that connects TransE with distributed optimization and formation control. Our main result indicates how the TransE optimization problem can be formulated as a distributed optimization problem, where agents only interact with their neighbors. Furthermore, we demonstrate that the system's convergence can be analyzed using graph-theoretical tools, particularly the properties of the graph Laplacian. By drawing parallels with formation control in multi-agent systems, we establish a framework for understanding the dynamics of embedding in multi-agent settings.
+\section{Preliminaries} \label{sec_prelim}
+We summarize algebraic graph theory and knowledge graph embedding. The following notations are used throughout the paper. we denote the set of real numbers by $\mathbb{R}$. An $n$-dimensional column vector with ones is denoted by $\mathbf{1}_{n}$, i.e., $\mathbf{1}_{n} = [1 \cdots 1]^{T} \in \mathbb{R}^{n}$. The $n \times n$ identity matrix is denoted by $I_n$. { The $n \times m$ zero matrix is denoted by $\mathbf{0}_{n \times m}$. If there is no confusion, matrices with zeros (ones) are denoted by $\mathbf{0}$ ($\mathbf{1}$).} For a matrix $A$, $A^{T}$ denotes the transpose of $A$. 
+% The spectrum of a square matrix $A$ is denoted by $\sigma(A)$. 
+For two matrices $A$ and $B$, $A \otimes B$ denotes the Kronecker product of $A$ and $B$. For two sets ${A}$ and ${B}$, % the difference $\mathcal{A} - \mathcal{B}$ is denoted by 
+${A} \backslash {B}$ denotes the set of elements that are in ${A}$ but not in ${B}$. For a set $A$, $|A|$ denotes the cardianlity of $A$.
 
-% The remainder of this paper is structured as follows: Section 2 provides the necessary preliminaries on graph theory and the TransE model. Section 3 presents our main results, illustrating the correspondence between KGE and formation control through both theoretical analysis and simulation. Finally, Section 4 concludes the paper with a discussion of the implications of our findings and potential directions for future research.
 
-\section{Preliminaries}
-We present preliminary results that will be used in the following sections. We summarize algebraic graph theory and knowledge graph embedding. Then we state the formation control problem.
+\subsection{Algebraic graph theory}
 
-\subsection{Graph theory}
+A directed graph (or graph) ${G} = ({V}, {E}, A)$ is defined as a triple consisting of a node set $V = \{ 1, \ldots, N \}$, an edge set ${E} \subset \{ (i, j): i, j \in V, i \not =  j \}$, where an edge is an ordered pair of distinct nodes in $V$, and a weight matrix $A = [a_{ij}] \in \mathbb{R}^{N \times N}$, which is a nonnegative matrix such that $a_{ij} > 0$ if and only if $(j,i) \in E$. The weight matrix is called the adjacency matrix of $G$. 
+% If $a_{ij} = a_{ji}$ for all $(j,i) \in E$, $G$ is called undirected. 
+If $(i, j)$ is an edge of $G$, $i$ is a parent node of $j$ and $j$ is a child node of $i$. A root is a node that has no parent. The set of neighbors of node $i$ in $G$ is defined as $\mathcal{N}_{i} = \{ j \in V: (j,i) \in E \}$. % The in-valency of node $i$ is the number of nodes in $\mathcal{N}_{i}$.
 
-A directed graph (or graph) ${G} = ({V}, {E}, W)$ consists of a set of nodes ${V} = \{ 1, \ldots, N \}$, a set of edges ${E} \subset \{ (i, j): i, j \in {V}, i \not =  j \}$, where an edge is an ordered pair of distinct nodes, and a weight matrix $W = [w_{ij}] \in \mathbb{R}^{N \times N}$, which is a nonnegative matrix such that $w_{ij} > 0$ if and only if $(j,i) \in {E}$. If $(i, j)$ is an edge of ${G}$, $i$ is a parent node of $j$ and $j$ is a child node of $i$. The set of neighbors of node $i$ in ${G}$ is defined as ${N}_{i} = \{ j: (j,i) \in {E} \}$. If $(i,j) \in {E}$ implies $(j,i) \in {E}$, ${G}$ is called undirected. % The in-valency of node $i$ is the number of nodes in ${N}_{i}$.
-A subgraph ${G}_{s} = ({V}_{s}, {E}_{s})$ of ${G}$ is a graph such that ${V}_{s} \subseteq {V}$ and ${E}_{s} \subseteq {E}$. If ${V}_{s} = {V}$, ${G}_{s}$ is called a spanning subgraph of ${G}$. A tree is a graph such that every node except for a node called the root has exactly one parent. A spanning tree of ${G}$ is a tree that is a spanning subgraph of ${G}$. The Laplacian matrix $L = [l_{ij}] \in \mathbb{R}^{N \times N}$ of a graph ${G}$ is defined as
+A subgraph $G_{s} = (V_{s}, E_{s}, A_{s})$ of $G = ({V}, {E}, A)$ is a graph such that $V_{s} \subseteq V$, $E_{s} \subseteq E$, and $[A_s]_{ij} = [A]_{ij}$ for all $(i,j) \in E_s$.  If $V_{s} = V$, $G_{s}$ is called a spanning subgraph of $G$. If $E_{s}$ consists of all of the edges in $E$ that have both endpoints in $V_{s}$, $G_{s}$ is called an induced subgraph of $G$. 
+% Similarly, the induced subgraph is a graph whose vertex set is $V_{s}$ and whose edge set consists of all of the edges in $E$ that have both endpoints in $V_{s}$. It is also said that $G_{s}$ is induced by $V_{s}$. The subgraph induced by $V_{s}$ is denoted by $G[V_{s}]$. 
+A tree is a graph such that every node except for a node called the root of the tree has exactly one parent. 
+% A forest is a graph consisting of one or more trees, no two of which have a node in common. 
+% A spanning tree (spanning forest) of $G$ is a tree (forest) that is a spanning subgraph of $G$. 
+A spanning tree of $G$ is a tree that is a spanning subgraph of $G$. A path in $G$ is a sequence $i_{1},\ldots,i_{k}$ of nodes such that $(i_{s}, i_{s-1}) \in E$ for $s = 1,\ldots,k-1$. If there is a path from $i$ to $j$, we say $j$ can be reached from $i$. 
+ A weak path in ${G}$ is a sequence $i_{1},\ldots, i_{k}$ of nodes such that either $(i_{s}, i_{s-1}) \in {E}$ or $(i_{s-1}, i_{s}) \in {E}$  for $s = 1,\ldots,k-1$. A graph ${G}$ is strongly connected (weakly connected) if there exists a path (weak path) from $i$ to $j$ for any distinct nodes $i,j \in {G}$. 
 
+% Directed graph를 기본으로 하는 논문들도 많으니 따로 아래 내용을 표기하지는 않아도 될 것 같습니다.
+% {\color{red}
+% \begin{remark} \label{directed_skip}
+% In this paper, only directed graphs are dealt with, and all graph elements (tree, path, etc) appearing later are also directed. However, for convenience, the word `directed' is omitted.
+% \label{directed_skip}
+% \end{remark}
+% }
+
+%  %{\color{cyan} 기존 Lemma 2.2를 여기로 옮겼습니다. 수정된 사항 확인 바랍니다. 이 lemma를 잘 설명해줄만한 그래프 하나를 lemma 아래쪽에 추가하면 어떨까요? 간단해 보이는 lemma지만 첫눈에 이해하기는 어려운 것 같으니 적절한 예시가 있으면 좋을 듯 합니다.}
+%  The following lemma is obtained: %  from basic notions on graphs:
+% % %%%%%%
+% \begin{lemma} \label{lema_root_sc}
+% For a graph with multiple directed spanning trees, the subgraph induced by the set of the root nodes is strongly connected.
+% %If a graph $G$ has multiple directed spanning trees, the set of every root node is a strongly connected component.
+% \end{lemma}
+% \begin{pf}
+% Consider any pair of root nodes of the graph. By definition, each root node has a directed path to the other root node. Notice that every node in the directed paths between the root nodes is also the root of a directed spanning tree. Therefore the subgraph induced by the set of the root nodes is strongly connected.
+% \end{pf}
+% %%%%%
+
+% A weighted graph is a graph $G$ with a nonnegative weight matrix $A = [a_{ij}] \in \mathbb{R}^{N \times N}$ such that $(i, j) \in E$ if and only if $a_{ji} > 0$.
+The Laplacian matrix $L = [l_{ij}] \in \mathbb{R}^{N \times N}$ of $G=({V}, {E}, A)$ is defined as
 \begin{align}
 l_{ij} = \left \{ \begin{array}{ll}
-\sum_{j \in {N}_{i}} w_{ij}, & i=j, \\
--w_{ij},  & (j,i) \in {E},  \\
+\sum_{j \in \mathcal{N}_{i}} a_{ij}, & i=j, \\
+-a_{ij},  & (j,i) \in E,  \\
 0, & \mathrm{otherwise}.
 \end{array}	\right.	\nonumber
 \end{align}
+% where $a_{ij} = [A]_{ij}$.
+% The in-degree and out-degree of node $i$ in $G$ are, respectively, defined as
+% \begin{align*}
+% {\degree}_{in}(i) = \sum_{j \in \mathcal{N}_{i}}a_{ij}, \; {\degree}_{out}(i) = \sum_{j \in \mathcal{N}_{i}}a_{ji}.
+% \end{align*}
+% The degree matrix of $G$ is defined as $D = [d_{ij}] \in \mathbb{R}^{N \times N}$, where $d_{ij} = {\degree}_{in}(i)$ for $i = j$, otherwise, $d_{ij} = 0$. Then the Laplacian matrix of $G$ can be written as $L = D - A$.
+%%%%
+%%%%
+The following lemmas are useful for analyzing consensus networks:
+\begin{lemma} [\cite{godsil2001algebraic}] \label{lemma_Laplacian_1} 
+For the Laplacian matrix $L$ of a graph $G = (V,E,A)$, the following is true:
+\begin{itemize}
+    \item All the eigenvalues of $L$ have nonnegative real parts.
+    \item All nonzero eigenvalues of $L$ have positive real parts.
+    \item Zero is an eigenvalue of $L$ with $\mathbf{1}_{|V|}$ as the corresponding right eigenvector.
+\end{itemize} 
+\end{lemma}
+%%%%%
+%%%%%
+\begin{lemma} \citep{lin2005necessary,ren2005consensus} \label{lemma_Laplacian_2}
+For the Laplacian matrix of a graph $G = (V,E,A)$, zero is a simple eigenvalue associated with the eigenvector $\mathbf{1}_{|V|}$ if and only if the graph has a directed spanning tree.
+\end{lemma}
+%%%%%
+%%%%%
+\begin{lemma} \citep{mirzaev2013laplacian} \label{lem_zero_eigen_multiplicity}
+For the Laplacian matrix of a graph, the algebraic multiplicity and geometric multiplicity of the zero eigenvalue are always equal.
+\end{lemma} 
+
+Similar to \cite{niezink2011consensus}, we introduce the notion of root-like induced subgraph as follows:
+\begin{definition}
+For a graph $G = (V, E, A)$, a subgraph $G_s = (V_s, E_s, A_s)$ of $G$  is called a \textbf{root-like induced subgraph} if it satisfies the following conditions:
+\begin{itemize}
+\item $G_s$ is strongly connected.
+\item For every node $i \in V$, if $i \in V_s$, it has no parent node in $V \backslash V_s$.
+\end{itemize}
+\end{definition}
+Since a root-like induced subgraph $G_s$ of a graph is strongly connected, it follows from \textit{Lemma \ref{lemma_Laplacian_2}}, the Laplacian matrix of $G_s  = (V_s, E_s, A_s)$ has a simple eigenvalue associated with the eigenvector $\mathbf{1}_{|V_s|}$. %T A example of a root-like induced subgraph is illustrated in Fig. xx.
 
 
-% \section{Main Result}
+\subsection{Knowledge graph embedding}
 
-% \subsection{TransE and Distributed Optimization}
-% To adapt TransE for a distributed multi-agent system, we reformulated the optimization problem for each agent in the graph as follows:
+A knowledge graph $\mathcal{K} = (\mathcal{E},\mathcal{R})$ is defined as a pair consisting of a set of entities $\mathcal{E}$ and a set of relations $\mathcal{R}$. 
+A knowledge graph stores manifold facts (or knowledges) as a collection of triples $\mathcal{F}=\{(h,r,t)\}$, where $h \in \mathcal{E}$ and $t  \in \mathcal{E}$ are referred to as the head and tail entities, respectively, and $r$ denotes the relation connecting them. 
 
-\begin{equation}\label{eq:min}
-    \min \sum_{i=1}^{N} f_{i} (x_{i})
-\end{equation}
-\begin{equation}\label{eq:f_i}
-    f_{i}(x_{i}) = \sum_{j \in \mathcal{H}_{i}} \frac{1}{2} \|x_{i} - x_{j} - r_{ji}\|_{2}^{2}
-\end{equation}
+For a knowledge graph $\mathcal{K} = (\mathcal{E},\mathcal{R})$, graph embedding is an optimization task aimed at finding low-dimensional representations of a knowledge graph’s entities and relations while preserving their semantic meaning. For a fact triple $(h,r,t)$, let the embedding vectors of $h$, $r$, and $t$  in $\mathbb{R}^d$ by $\mathbf{h}$, $\mathbf{r}$, and $\mathbf{t}$, respectively. The knowledge graph embedding problem is then defined as follows:
+\begin{align} \label{eq_kge}
+\textrm{minimize} \sum_{(h,r,t) \in \mathcal{F}} f(\mathbf{h},\mathbf{r},\mathbf{t}),
+\end{align}
+where $f$ is a function that encodes the relations. Roughly speaking, the goal is to find $\mathbf{h}$, $\mathbf{r}$, and $\mathbf{t}$ such that $f( \mathbf{h}, \mathbf{t}, \mathbf{r}) \approx 0$. Depending on the choice of the function $f$, various knowledge graph embedding models can be fomulated \citep{wang_knowledge_2017, cao2024knowledge}. For instance, setting $f(\mathbf{h},\mathbf{t},\mathbf{r}) = \mathbf{h} -\mathbf{t} - \mathbf{r}$, the following model can be formulated:
+\begin{align} \label{eq_transe}
+\textrm{minimize} \sum_{(h,r,t) \in {\mathcal{F}}} \| \mathbf{t}-\mathbf{h} - \mathbf{r} \|^2,
+\end{align}
+which is known as TransE \citep{bordes_translating_2013}. Details on knowledge graph embedding can be found in \cite{wang_knowledge_2017, cao2024knowledge}.
 
-% In this context, \( x \in \mathbb{R}^{N \times d} \) denotes the embedding space of entities, where \( x_i \in \mathbb{R}^d \) is the embedding vector for the \(i\)-th agent out of \( N \) agents. The set \( \mathcal{H}_i \) includes the neighbors of agent \( i \), which serve as head entities. The vector \( r_{ji} \in \mathbb{R}^d \) signifies the predefined relation from entity \( j \) to entity \( i \). The objective is to minimize the energy function \( f_i \) for each agent. We assumed that the relation vectors are normalized to unit magnitude and are uni-directed. For simplicity, the embedding space \(x\) is assumed to be a column vector: \(x = [x_1, x_2, \ldots, x_n]^\top\) where \(x_i \in \mathbb{R}\) and \(r_ji \in \mathbb{R}\).
+\section{Graph embedding formaultion of formation control} \label{sec_formulation}
 
-% The optimization problem \eqref{eq:min} is addressed using a distributed optimization approach. Each agent aims to minimize its local objective function \eqref{eq:f_i}. The gradient of \( f_i \) with respect to \( x_i \) is given by:
-% \begin{equation}
-%     p_i = - \pdv{f_{i}}{x_{i}} = - \sum_{j \in \mathcal{H}_i} (x_{i} - x_{j} - r_{ji})
-%     \label{eq:p}
-% \end{equation}
+\subsection{Formation graph embedding}
 
-% The steepest descent direction \( p_i \) guides the optimization process towards a zero gradient. This is utilized in the Gradient Descent Method (GDM), where each \( x_i \) iteratively updates its position to reach a steady state:
+Formation control refers to the coordination of multiple mobile agents (e.g., robots, drones, or autonomous vehicles) to maintain a specific geometric arrangement while moving or performing tasks. The goal is to control the positions and orientations of agents using only local sensing and communication. As discussed in \cite{oh2015survey}, there is a main approach to formation control %there are two main approaches to formation control:
+\begin{itemize}
+% \item Position-based control: Agents directly regulate their positions with respect to a global coordinate system.
+\item Displacement-based control: Agents control the relative positions of their neighbors while assuming aligned coordinate frames.
+% \item Distance-based control: Agents maintain specified inter-agent distances using only local measurements, often leading to a more decentralized implementation.
+\end{itemize}
+% Formation control has applications in swarm robotics, UAV formations, satellite coordination, and autonomous vehicle platooning​.
 
-% \begin{equation}
-%     x_{i}^{t+1} = x_i^t + \alpha p_i(x_i^t)
-%     \label{eq:update}
-% \end{equation}
+% Formation control has been widely studied for mobile agents. The goal of formation control is to drive a group of agents to achieve and maintain a desired formation. As discussed in \cite{oh2015survey}, a variety of formation control problems can be stated depending on the models of agents and the information that is available to the agents. 
 
-% The step size \( \alpha \) regulates the update speed of agents. Although each agent may have its own local minimum, determining the stabilization of the entire system is challenging. Therefore, we expand \( p_i \) into a vector form:
+For a group of single-integrator agents, a displacement-based formation control problem can be formulated as follows. Consider the following $N$ single-integrator agents:
+\begin{align} \label{eq_single_integrator}
+\dot{x}_i = u_i,
+\end{align}
+where $x_i \in \mathbb{R}^d$ and $u_i \in \mathbb{R}^d$ denote the position and control input of agent $i$, for $i = 1,\ldots,N$.  Assume that each agent is able to sense the relative positions (displacements) of its neighboring agents. Specifically, we assume that agent $i$ senses $x_i - x_j$ if agent $j$ is one of its neighboring agents. The sensing topology can be modeled as a graph, $G = (V,E,A)$, where the nodes denote the agents and an edge $e_{ji} \in E$ indicates that agent $i$ senses $x_i - x_j$. The desired formation can be speficified by the desired displacement $r_{j,i} \in \mathbb{R}^d$ for each $(j,i) \in E$. Then the displacement-based formation control problem is state as follows: 
+\begin{problem} \label{problem_displacement}
+For the $N$ agents modeled as \eqref{eq_single_integrator}, the relative position sensing topology is given by $G = (V,E,A)$. Design the control law $u_i$ such that the condition $x_i - x_j = r_{j,i}$ for  all $(i,j) \in E$.
+\end{problem}
 
-% \begin{equation}
-%     p = - (Lx - r)
-%     \label{eq:p_vector}
-% \end{equation}
-
-% Here, \( L \) represents the linear couplings between elements of \( x \), and \( r \) is a column vector containing all \( r_i \) (\( r_i = \sum_{j \in H_i} r_{ji} \)). Based on \eqref{eq:p_vector}, the original problem \eqref{eq:min} can be reformulated as:
-
-% \begin{equation}
-%     \min \frac{1}{2} \|Lx - r\|_{2}^{2}
-%     \label{eq:new_min}
-% \end{equation}
-% \noindent The solution \( x^* \) of \eqref{eq:new_min} implies that \( Lx^* - r = 0 \). % when the objective function is convex. 
-
-% In summary, TransE for multi-agent graphs can be seen as an optimization problem that can be solved in a distributed manner. Furthermore, spectral properties of the graph Laplacian \( L \) allow us to analyze the overall system behavior.
-
-% \subsection{Formation Control with Displacement}
-
-% The matrix \( L \) has specific properties, particularly regarding its singularity, which affects the existence of \( x^* \). To verify the system’s convergence, we utilize a method from formation control theory. The update rule in GDM \eqref{eq:update} plays a crucial role. 
-
-% \begin{remark}
-%     The update rule \eqref{eq:update} can be interpreted as a discrete-time approximation of the continuous-time dynamics of the system. By analyzing the continuous-time dynamics, we can determine the stability and convergence of the system. The dynamics of the system can be described as:
-
-%     \begin{equation}\label{eq:dis_dynamic}
-%         \dot{x}_i = k_p \sum_{j \in \mathcal{H}_i} (x_{i} - x_{j} - r_{ji})
-%     \end{equation}
-%     \begin{equation}\label{eq:total_dynamic}
-%         \dot{x} = k_p(Lx - r)
-%     \end{equation}
-%     \noindent \eqref{eq:total_dynamic} is a vector form of \eqref{eq:dis_dynamic}.
-% \end{remark}
-
-% The dynamics in \eqref{eq:total_dynamic} is a single integrator control law for displacement-based formation control of digraphs with a Laplacian matrix. As shown by the dynamics, the current state directly influences the rate of change. Thus, the previous distributed optimization problem and the new formation control problem are equivalent. Entities follow the control law \eqref{eq:total_dynamic}, making it possible to use control theory methods to analyze features of a new embedding system in continuous time.
-
-% Given the dynamics \eqref{eq:total_dynamic}, we derived another equation about agent's velocity:
-
-% \begin{equation}
-%     \ddot{x} = k_p L \dot{x}
-%     \label{eq:2dot}
-% \end{equation}
-
-% \noindent This differential equation has a simple solution:
-
-% \[ 
-%     \dot{x}(t) = e^{k_p Lt} \dot{x}_0 
-% \]
-
-% \noindent Since \( L \) is usually asymmetric and may have complex eigenvalues, we decompose \( L \) into Jordan form:
-
-% \[ 
-%     L = T J T^{-1} 
-% \]
-
-% \noindent where \( J \) is the Jordan form of \( L \). \( T \) and \(T^{-1}\) are the matrices of right and left laplacian eigenvectors and generalized eigenvectors. Substituting this into the solution:
+% For the group of single-integrator agents \eqref{eq_single_integrator}, a distance-based formation control problem can be formulated as follows. Assume that each agent is able to sense the distances of its neighboring agents. That is, we assume that agent $i$ senses $|x_j - x_i|$ if agent $j$ is one of its negibhoring agents. Similar to the displacement-based control problem, the sensing topology can be modeled as a graph $G = (V,E,A)$. The desired formation can be specified by the desired distance $d_{ji} \ge 0$ for each $(j,i) \in E$.
+% Then the distance-based formation control problem is state as follows: 
+% \begin{problem} \label{problem_distance}
+% For the $N$ agents modeled as \eqref{eq_single_integrator}, the relative position sensing topology is given by $G = (V,E,A)$. Design the control law $u_i$ such that the condition $\|x_i - x_j\| = d_{ji}$ for  all $(i,j) \in E$.
+% \end{problem}
 
 
-% \begin{equation}
-%     \dot{x}(t) = T e^{k_p J t} T^{-1} \dot{x}_0 
-%     \label{eq:jordan_decom}
-% \end{equation}
-% \noindent The matrix \( J \) has \( m \) zero eigenvalues \( \lambda_n = 0 \) (\( n = 1,2,...,m \)), and the real parts of the other nonzero eigenvalues are positive \cite{mirzaev_laplacian_2013}. As a result, only the zero eigenvalues affect the system's stability and convergence \cite{mesbahi_graph_2010}. 
+\subsection{Graph embedding formulation}
+% The formation control problems stated in \textit{Problems \ref{problem_displacement}} and \textit{\ref{problem_distance}} can be formulated as a graph embedding. 
+The formation control problems stated in \textit{Problems \ref{problem_displacement}} can be formulated as a graph embedding. 
+% To see this, we first consider the displacement-based formation control problem. 
+For the sensing graph $G = (V,E,A)$, define the set of facts as
+\begin{align*}
+\mathcal{F} = \{(i,r_{j,i},j) : (i,j) \in E\},
+\end{align*}
+where $r_{j,i}$ denotes the deisred displacement of node $j$ from node $i$.
+Notice that the pair $(V, \mathcal{F})$ can be viewed as a knowledge graph. Thus the displacement-based formation control problem in \textit{Problem \ref{problem_displacement}} can be formulated as knowledge graph embedding as follows:
+\begin{align} \label{eq_transe_formation}
+\textrm{minimize} \sum_{(i,r_{j,i},j) \in \mathcal{F}} \frac{1}{2} \| x_i - x_j - {r_{j,i}} \|^2,
+\end{align}
+where $x_i, x_j \in \mathbb{R}^d$, which is similar to a TransE type knowledge graph embedding problem. % In the realm of knowledge graph embedding, \eqref{eq_transe_formation} is often solved by centralized optimization or machine learning methods.
 
-% %Moreover, velocity of the agents will converge to a steady state if algebraic multiplicity and geometric multiplicity of zero laplacian eigenvalues are the same. 
+% Next we consider the distance-based formation control problem. For the sensing graph $G = (V,E,A)$, define the set of relations as
+% \begin{align*}
+% R = \{(i,d_{ji},j) : (i,j) \in E\},
+% \end{align*}
+% where $d_{ji}$ denotes the deisred distance between nodes $i$ and $j$.
+% Again notice that the pair $(V, {R})$ can be viewed as a knowledge graph. Thus the distance-based formation control problem in \textit{Problem \ref{problem_distance}} can be formulated as knowledge graph embedding as follows:
+% \begin{align} \label{eq_distance_formation}
+% \textrm{minimize} \sum_{(i,d_{ji},j) \in \mathcal{F}} \frac{1}{2} \| \|x_j - x_i\|^2 - {d_{ji}^2} \|^2.
+% \end{align}
 
-% \subsection{Graph Laplacian Eigenvalues and Stability}
-% \begin{remark}
-%     When all zero laplacian eigenvalues have a simple \(1 \times 1 \) Jordan block, the velocity of the system will converge to a steady state. 
-% \end{remark} 
+% Motivated by \eqref{eq_transe_formation} and \eqref{eq_distance_formation}, 
+Motivated by \eqref{eq_transe_formation}, 
+we define a \textbf{formation graph embedding (FGE)} as the quadraple $(G,\mathcal{F},d,f)$, where $G$ represents the sensing graph, $\mathcal{F}$ denotes the set of facts, $d$ denotes the embedding dimension, and $f$ is the predicate function that encodes the formation constraints. For instance, in the displacement-based formation control problem, the predicate function is given by 
+$$f(x_i,x_j,r_{j,i}) = \frac{1}{2}\| x_i-x_j-r_{j,i} \|^2.$$
 
-% If 2 or more zero eigenvalues compose a bigger jordan block than \(1 \times 1\), the system will diverge because of nonzero elements on upper triangular part of the block. After the matrix exponential, the system will have polynomial terms of \(t\) which make the system diverge. For example, the matrix exponential of a \(3 \times 3\) Jordan block of zero eigenvalues is:
-% \[
-% \begin{matrix}
-%     \exp{\begin{bmatrix}
-%         0 & 1 & 0 \\
-%         0 & 0 & 1 \\
-%         0 & 0 & 0
-%     \end{bmatrix} k_p t} & = & 
-%     \begin{bmatrix}
-%         1 & k_p t & \frac{1}{2} (k_p t)^2 \\
-%         0 & 1 & k_p t \\
-%         0 & 0 & 1
-%     \end{bmatrix}
-% \end{matrix}
-% \]
+% Similarly, in the distance-based formation control problem, the function is defined as
+% $$f(x_i,x_j,d_{ji}) = \frac{1}{2}\| \|x_j - x_i\|^2 - {d_{ji}^2} \|^2.$$
+Drawing inspiration from knowledge graph embedding, we introduce the concept of FGE to characterize formation control approaches utilized in a graph-based embedding framework. 
+% As demonstrated above, both displacement- and distance-based formation control problems can be effectively formulated as graph embedding problems.
+As demonstrated above, displacement-based formation control problems can be effectively formulated as graph embedding problems.
 
-% On the right side of the equation, the polynomial terms of \(t\) will not vanish as time passes. Hence, the system velocity will diverge.
+\subsection{Solution of FGEs via distributed optimization}
+We solve the FGEs correspond to the formation control problems in \textit{Problems \ref{problem_displacement}} based on distributed optimization. We first consider the displacement-based formation control problem. The FGE \eqref{eq_transe_formation} can be arranged as
+\begin{align*}
+& \textrm{minimize} \sum_{i \in V}f_i(x_i,x_j,r_{j,i}), \\
+ & f_i(x_i,x_j,r_{j,i}) = \frac{1}{2} \sum_{j \in \mathcal{N}_i} \| x_i - x_j - {r_{j,i}} \|^2.
+\end{align*}
+That is, the FGE \eqref{eq_transe_formation} can be solved by optimizing the local objective functions. The update rule for $x_i$ is then designed as the following gradient descent law:
+\begin{align*}
+\dot{x}_i &= - \nabla_{x_i} f_i (x_i , x_j,r_{j,i}) \\
+               &= -\sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{j,i}),
+\end{align*}
+which can be written in the vector form as
+\begin{align} \label{eq_displacement_based_law}
+\dot{x} = -(L \otimes I_{d} x-r),
+\end{align}
+where $r = [r_1 \; r_2 \; \cdots \: r_N]^T$ with $r_i = \sum_{j \in \mathcal{N}_i} r_{j,i}$. Notice that the equation \eqref{eq_displacement_based_law} corresponds to the well-known displacement-based formtaion control law \citep{olfati-saber2004consensus,ren2005consensus,lin2007state,dimarogonas2008connection,oh2015survey}. In short, \textit{Problem \ref{problem_displacement}} can be viewed as a FGE and a distributed optimization based update rule for the problem corresponds to the well-known displacement-based formation control law.
 
-% Hence, we explored the shapes of the graphs that produces the zero laplacian eigenvalues analyzed them if they have simple jordan blocks or not. We figured out two features of digraphs: \textbf{Roots} and \textbf{SCCs} (Strongly Connected Components).
-\begin{equation}
-    \dot{x} = -k_p(L \otimes I_d x - r)
-\label{eq:entire_dynamic}
-\end{equation}
 
-\section{Main Result 2}
-\subsection{Infeasible Embedding}
-We define infeasible embedding as cases where the given embedding formulation has solutions but does not hold \(\dot{x} = 0\). We can rewrite these cases as \((L \otimes I_d)x - r \neq 0\). To explain the infeasible cases, we present a simple example of infeasible embedding: a cycle of 3 entities with 3 relations.
+% We next consider the distance-based formation control problem, which corresponds to the FGE \eqref{eq_distance_formation}. The FGE \eqref{eq_distance_formation} can be arranged as
+% \begin{align*}
+% & \textrm{minimize} \sum_{i \in V}f_i(x_i,x_j,d_{ji}), \\
+%  & f_i(x_i,x_j,d_{ji}) = \frac{1}{2} \sum_{j \in \mathcal{N}_i} \| \|x_j - x_i\|^2 - {d_{ji}}^2 \|^2.
+% \end{align*}
+% Based on optimizing the local objective function, the update rule for $x_i$ can be designed as
+% \begin{align*}
+% \dot{x}_i &= - \nabla_{x_i} f_i (x_i , x_j,d_{ji}) \\
+%                &= -\sum_{j \in \mathcal{N}_i} \left( \|x_j - x_i\|^2 - {d_{ji}}^2 \right)\frac{x_j - x_i}{\| x_j - x_i \|},
+% \end{align*}
+% which is well-known distance-based formation control law found in \cite{krick2009stabilisation,dorfler2010geometric,oh2015survey}.
 
-\begin{figure}[h]
-\centering
-\begin{tikzpicture}[>=stealth, node distance=1.5cm]
 
-% Define nodes
-\node[circle, draw, fill=white!20, scale = 1.5] (1) {1};
-\node[circle, draw, fill=white!20, scale = 1.5, right of=1] (2) {2};
-\node[circle, draw, fill=white!20, scale = 1.5, below of=2] (3) {3};
+\subsection{Feasiblity of FGEs}
+ As discussed, formation control problems can be formulated as FGEs. To further investigate the behavior of the formation control system \eqref{eq_displacement_based_law}, we define the following notion of feasibility of FGEs:
+ \begin{definition} [\textbf{Feasibility of FGEs}]
+An FGE $(G,\mathcal{F},d,f)$ is feasible if there exist $x_1^*,\ldots,x_N^*$, where $N$ denotes the number of nodes of $G$, such that 
+\begin{align*}
+\sum_{(i,r_{j,i},j) \in \mathcal{F}}f(x^*_i,x_j^*,r_{j,i}) = 0.
+\end{align*}
+If not, the FGE $(G,\mathcal{F},d,f)$ is infeasible.
+ \end{definition}
 
-% Draw edges with arrows
-\draw[->] (1) -- (2) node[midway, below] {$r_{12}$};
-\draw[->] (2) -- (3) node[midway, left] {$r_{23}$};
-\draw[->] (3) -- (1) node[midway, left] {$r_{31}$};
+By definition, the FGE \eqref{eq_transe_formation} is feasible if there exists a constant vector $x^*$ such that $(L \otimes I_d)x^* = r$. Otherwise it is infeasible. If the FGE \eqref{eq_transe_formation} is feasible, the dispalcement-based formation control law \eqref{eq_displacement_based_law} can be reduced into a consensus law. To see this, define $\tilde{x} = x - x^*$. Then \eqref{eq_displacement_based_law} can be arranged as follows:
+ \begin{align} \label{eq_consensus}
+ \dot{\tilde{x}} = - (L \otimes I_d) \tilde{x},
+ \end{align}
+ which correspond to the well-known consensus law for single-integrator agents \cite{olfati-saber2004consensus,ren2005consensus,lin2007state,dimarogonas2008connection,oh2015survey}. The behavior of the system described by \eqref{eq_consensus} has been widely investigated \cite{olfati-saber2004consensus,ren2005consensus,lin2007state,oh2015survey} assuming the feasibility of the FGE. For instance, if the sensing graph $G$ has a spanning tree, $\tilde{x} \to 0$ as $t \to \infty$
 
-% Add labels to edges (optional)
-\end{tikzpicture}
-\caption{A cycle of 3 nodes.}
-\label{fig:cycle}
+While the FGE \eqref{eq_transe_formation} has been widely studied in the literature, majority of the existing results have focused on feasible FGEs. Though infeasible FGEs have been studied in \cite{dimarogonas2008connection}, there remain further researches to be conducted. Accordingly, we focus on the behavior of the displacement-based formation control system \eqref{eq_displacement_based_law} under the assumption that the corresponding FGE is infeasible.
+
+
+\section{Infeasible FGEs} \label{sec_infeasible}
+
+In this section, we examine the displacement-based formation control system \eqref{eq_displacement_based_law} under the assumption that the corresponding FGE is infeasible. For clarity, we consider the case where $ d = 1 $. That is, we consider the formation graph embedding $(G,\mathcal{F},d,f)$, where $d=1$ and $f(x_i,x_j) = \frac{1}{2}\| x_j-x_i-r_{j,i} \|^2$. The corresponding formation control system is given by 
+\begin{align} \label{eq_displacement_1d}
+\dot{x} = -(Lx - r), \; x(0) = x_0,
+\end{align}
+where $x \in \mathbb{R}^N$. Though we assume that the embedding dimension $d$ is one, the results presented in this section can be readily generalized to higher dimensions.
+
+To analyze \eqref{eq_displacement_1d} when the corresponding FGE $(G,\mathcal{F},d,f)$ is infeasible, we first investigate the limit of $\dot{x}(t)$ as $t \to \infty$.
+\begin{lemma} \label{lemma_1}
+For the displacement-based formation control system \eqref{eq_displacement_1d}, let $m$ be the multiplicity of the zero eigenvalue of the Laplacian matrix $L$ of the sensing graph $G$. Let $p_k$ and $q_k$ be the right and left eigenvectors associatedwith the $k$-th zero eigenvalue for $k = 1,\ldots,m$. Then,
+%\begin{align*}
+%    \lim_{t\rightarrow \infty} \dot{x}(t) = \sum_{k=1}^m p_k q_k^\top \dot{x}(0).
+%\end{align*}
+\begin{align*}
+    \lim_{t\rightarrow \infty} \dot{x}(t) = \sum_{k=1}^m p_k q_k^\top r.
+\end{align*}
+\end{lemma}
+
+\begin{pf}
+Differentiating the both sides of \eqref{eq_displacement_1d}, we obtain $\ddot{x}(t)=-L\dot{x}(t)$, solution of which is given by $\dot{x}(t)=e^{-Lt}\dot{x}(0)$. By the Jordan decomposition theorem, there exists an invertible matrix $T$ such that $L = TJT^{-1}$, where $J$ is the Jordan form of $L$. From \textit{Lemma \ref{lem_zero_eigen_multiplicity}}, it follows that $J$ contains exactly $m$ Jordan blocks of size $1 \times 1$ associated with the zero eigenvalue.
+Using Jordan decomposition,
+\begin{align*}
+    \dot{x}(t) = e^{-Lt}\dot{x}(0) = Te^{-Jt}T^{-1}\dot{x}(0).
+\end{align*}
+It follows from \textit{Lemma \ref{lemma_Laplacian_1}} that all nonzero eigenvalues of $L$ have positive real parts. Thus, for any nonzero eigenvalue $ \lambda_i $ of $ L $, $ e^{- \lambda_i t} \to 0 $ as $ t \to \infty $. It follows that
+\begin{align*}
+    \lim_{t\rightarrow \infty} \dot{x} &= \sum_{k=1}^m p_k q_k^\top \dot{x}(0) = \sum_{k=1}^m p_k q_k^\top (r-Lx_0)  = \sum_{k=1}^m p_k q_k^\top r,
+\end{align*}
+which completes the proof. $\blacksquare$
+\end{pf}
+If the FGE is feasible, then there exists $x^*$ such that $Lx^* = r$.
+According to \textit{Lemma \ref{lemma_1}}, if the FGE is feasible, then we have
+\begin{align*}
+    \lim_{t\rightarrow \infty} \dot{x}(t) = \sum_{k=1}^m p_k q_k^\top r = \sum_{k=1}^m p_k q_k^\top Lx^* = 0,
+\end{align*}
+which shows that the nodes converge to stationary points. If the FGE is infeasible, the convergence property depends on the sensing graph $G$, as will be shown in below.
+
+Based on \textit{Lemma \ref{lemma_1}}, we present the following theorem, which is about the behavior of the nodes when $G$ is strongly connected and the FGE is infeasible.
+\begin{theorem} \label{thm_main}
+For the displacement-based formation control system \eqref{eq_displacement_1d}, assume the following:
+\begin{itemize}
+\item $G$ is strongly connected.
+\item The FGE is infeasible.
+\end{itemize}
+Let $p_1 = \mathbf{1}_N$ and $q_1$ be the right and left eigenvectors associated with the zero eigenvalue such that $q_1^\top p_1 = 1$. Then the following is true: 
+\begin{align*}
+\lim_{t\rightarrow \infty} \dot{x}(t) &=  q_1^\top r \mathbf{1}_N, \\
+\lim_{t \to \infty} Lx(t) &= r - q_1^\top r  \mathbf{1}_N.
+\end{align*}
+\end{theorem}
+\begin{pf}
+Since $G$ is strongly connected, it follows from \textit{Lemma \ref{lemma_Laplacian_2}} that zero is a simple eigenvalue associated with the eigenvector $\mathbf{1}_N$. It follows from \textit{Lemma \ref{lemma_1}} that 
+\begin{align*}
+\lim_{t\rightarrow \infty} \dot{x}(t) &= p_1 q_1^\top r = q_1^\top r  \mathbf{1}_N.
+\end{align*}
+Further, from \eqref{eq_displacement_1d}, we obtain
+\begin{align*}
+\lim_{t \to \infty} \dot{x}(t) = q_1^\top r  \mathbf{1}_N = \lim_{t\to \infty}(r-Lx(t)),
+\end{align*}
+which completes the proof. $\blacksquare$
+\end{pf}
+
+\textit{Theorem \ref{thm_main}} shows that if $G$ is stronlgy connected and the FGE is infeasible, the velocities of the nodes converge to an identical value, which can be determined by $G$ and $r$. Nonetherless, according to \textit{Theorem \ref{thm_main}}, the relative positions of the nodes satisfy the constraint, $\lim_{t \to \infty} Lx(t) = r - q_1^\top r  \mathbf{1}_N$. Note that \textit{Theorem \ref{thm_main}} can be applied to a root-like induced subgraph that has an infeasible corresponding FGE.
+
+
+
+
+
+Finally, the following theorem states a condition under which the nodes converge to stationary points even when the FGE is infeasible.
+\begin{theorem} \label{thm_main_2}
+For the displacement-based formation control system \eqref{eq_displacement_1d}, assume the following:
+\begin{itemize}
+\item $G$ has a spanning tree.
+\item There exists no root-like induced subgraph in $G$.
+\item The FGE is infeasible.
+\end{itemize}
+Then the nodes converge to stationary points.
+\end{theorem}
+%
+%
+\begin{pf}
+Since $G$ has a spanning tree, it follows from \textit{Lemma \ref{lemma_Laplacian_2}} that zero is a simple eigenvalue associated with the eigenvector $\mathbf{1}_N$. It follows from \textit{Lemma \ref{lemma_1}} that 
+\begin{align*}
+\lim_{t\rightarrow \infty} \dot{x}(t) &= p_1 q_1^\top r = q_1^\top r  \mathbf{1}_N.
+\end{align*}
+This shows that the velocities of all the nodes converge to an identical value. Without loss of generality, we assume that node $1$ is a root. Then $\dot{x}_1 = 0$, which shows that all the nodes converge to stationary points. 
+$\blacksquare$
+\end{pf}
+
+\begin{remark}
+Several remarks are in order here:
+\begin{itemize}
+\item As demonstrated in \textit{Theorem \ref{thm_main}}, strong connectivity appears to contribute to the undesirable phenomenon in which the nodes move at an identical speed when the FGE is infeasible. We conjecture that, even when the FGE is infeasible, the nodes may instead converge to stationary points if no root-like induced subgraph exists.
+
+\item Although \textit{Theorem \ref{thm_main_2}} assumes that $G$ has a spanning tree, we conjecture that a similar result can be established even when $G$ constains multiple root nodes, provided that no root-like induced subgraph exsits in $G$. 
+
+\item Finally, we aim to extend the results presented in this paper to the more general case where $G$ is weakly connected.
+\end{itemize}
+\end{remark}
+
+
+
+\section{Simulation results} \label{sec_simulation}
+
+To validate the theoretical results of the previous section, we conducted several simulations. In all simulations, the following assumptions were made:
+\begin{itemize}
+\item The embedding dimension was set to 2.
+\item The initial positions of all nodes were randomly assigned.
+\end{itemize}
+
+%첫 번째 시뮬레이션에서 우리는 infeasible한 FGE를 갖는 다섯 개의 노드의 거동을 살펴보았다. 해당 노드들의 sensing graph는 Fig. 1과 같고 그에 해당하는 라플라시안 행렬은 다음과 같다.
+%We first examined a case where the FGE is feasible. In this scenario, the system always converges and successfully finds the optimal solution. 
+
+\begin{figure}[h] % 'h' specifies placement (here)
+    \centering
+    \begin{tikzpicture}[>=stealth, node distance=2.0cm]
+    
+    % Define nodes
+    \node[circle, draw, fill=white!20, scale = 1.0] (1) {1};
+    \node[circle, draw, fill=white!20, scale = 1.0, right of=1] (2) {2};
+    \node[circle, draw, fill=white!20, scale = 1.0, above of=2] (3) {3};
+    \node[circle, draw, fill=white!20, scale = 1.0, above of=1] (4) {4};
+    \node[circle, draw, fill=white!20, scale = 1.0, right of=3] (5) {5};
+    
+    % Draw edges with arrows
+    \draw[->] (1) -- (2) node[midway, above] {$r_{1,2}$};
+    \draw[->] (2) -- (3) node[midway, left ] {$r_{2,3}$};
+    \draw[->] (1) -- (4) node[midway, right] {$r_{1,4}$};
+    \draw[->] (3) -- (5) node[midway, below] {$r_{3,5}$};
+    \draw[->] (4) -- (3) node[midway, below] {$r_{4,3}$};
+    
+    % Add labels to edges (optional)
+    
+    \end{tikzpicture} 
+    \caption{A graph of 5 nodes.}
+    \label{fig:5nodes}
 \end{figure}
 
-\begin{example}\label{ex:cycle}
-    All nodes of the cycle in Fig. \ref{fig:cycle} are strongly connected, so they can reach each other. Therefore, the graph Laplacian \(L\) of the cycle has one zero eigenvalue \cite{olfati-saber_consensus_2007}.
-\end{example}
+In the first simulation, we examined the behavior of five nodes with an infeasible FGE. The sensing graph of these nodes is shown in Fig. 1. 
+%, and the corresponding Laplacian matrix is given as follows.
+%\begin{align}
+%    \nonumber
+%    L = \begin{bmatrix}
+%        0 & 0 & 0 & 0 &0\\
+%        -1 & 1 & 0 & 0 & 0\\
+%        0 & -1 & 1 & -1 & 0\\
+%        -1 & 0 & 0 & 1 & 0\\
+%        0 & 0 & -1 & 0 & 1
+%    \end{bmatrix}.
+%\end{align}
+
+\begin{figure}[h]
+    \centering
+    \vspace{-2mm}
+    \includegraphics[width=0.9\linewidth]{IMG/feasible5_trajectory_2.eps}
+    \vspace{-5mm}
+    \caption{A feasible FGE of 5 nodes. Red numbers indicate initial positions of nodes.}
+    \label{fig:feasible}
+\end{figure}
+We used the following vectors
+\begin{subequations} \label{eq_r1r2r3}
+\begin{align} 
+\mathbf{r}_1 &= \left(0.9942, 0.1074\right)^\top, \\
+\mathbf{r}_2 &= \left(0.5384, 0.8427\right)^\top, \\
+\mathbf{r}_3 &= \left(0.6545, 0.7561\right)^\top.
+\end{align}
+\end{subequations}
+to define the desired relative positions. All three vectors have a unit norm.
+
+Fig. 2 illustrates the trajectories of five nodes when the desired positions are set as follows:
+$
+r_{1,2}=r_{3,4}=\mathbf{r}_1,\; r_{1,4}=r_{2,3}=\mathbf{r}_2,\; r_{3,5}=\mathbf{r}_3.
+$
+Since the FGE corresponding to the desired positions is feasible, the nodes formed the formation determined by the desired positions and converged to stationary points.
+
+\vspace{-3mm}
+%
+%
+%Node 1 acts as the root, so it retains its initial position. The other nodes then determine their optimal positions relative to the root. For the feasible case, we defined the formation as 
+%$
+%r_{1,2}=r_{34}=\mathbf{r}_1,\quad 
+%r_{1,4}=r_{23}=\mathbf{r}_2,\quad 
+%r_{3,5}=\mathbf{r}_3.
+%$
+%
+%
+%Fig.~\ref{fig:feasible} illustrates that nodes 1, 2, 3, and 4 form a parallelogram via the displacement relations $\mathbf{r}_1$ and $\mathbf{r}_2$, while node 5 is located at a displacement of $\mathbf{r}_3$ from node 3. Since there is no geometric inconsistency, this configuration represents a feasible FGE.
+%
+\begin{figure}[h]
+    % \vspace{-2mm}
+    \centering
+    \includegraphics[width=0.9\linewidth]{IMG/infeasible5_trajectory_2.eps}
+    \vspace{-5mm}
+    \caption{An infeasible FGE of 5 nodes. Red numbers indicate initial positions of nodes.}
+    \label{fig:infeasible5}
+\end{figure}
+
+Fig. 3 illustrates the trajectories of five nodes when the desired positions are set as follows:
+$
+r_{1,2}=r_{2,3}=r_{3,4}=\mathbf{r}_1,\; r_{1,4}=\mathbf{r}_2,\; r_{3,5}=\mathbf{r}_3.
+$
+Compared to the desired positions corresponding to Fig. 2, only $r_{2,3}$ has been changed from $\mathbf{r}_2$ to $\mathbf{r}_1$.
+Due to this change, the FGE of these nodes becomes infeasible, and the desired positions were not achieved. However, as expected by Theorem \ref{thm_main_2}, the nodes converged to stationary points. Specifically, each node's position was determined relative to the root $x_1$ as follows:
+\begin{align}\label{eq:result1}
+\nonumber    x_2 &= x_1 + \mathbf{r}_{1},\\ 
+\nonumber    x_3 &= x_1 + \frac{3\mathbf{r}_1 + \mathbf{r}_2}{2},\\ 
+\nonumber    x_4 &= x_1 + \mathbf{r}_{2},\\ 
+\nonumber    x_5 &= x_1 + \frac{3\mathbf{r}_{1} + \mathbf{r}_{2}}{2} + \mathbf{r}_{3}. 
+\end{align}
+% Here, $x_3$, which is influenced by two neighbors, settles at the average of those neighbors’ preferred positions.
+
+
+%
+%
+%Next, we examined simulations of an infeasible FGE. As explained in the previous section, an infeasible FGE results in either convergence to a stationary configuration or persistent linear motion. We began with the stationary case. We used the same graph as in Fig.~\ref{fig:5nodes} and modified only one relation from the previous formation, namely by setting $r_{2,3} = \mathbf{r}_1$. The resulting infeasible FGE is as follows:
 
 
 
-To analyze the convergence of Example \ref{ex:cycle}, we can derive the second derivative of \(x\) from \eqref{eq:entire_dynamic}:
+%Fig.~\ref{fig:infeasible5} reveals the result of the infeasible FGE. If the graph contained only nodes 1,2 and 3, they would be collinear ($\because r_{1,2}=r_{2,3}=\mathbf{r}_1$). However, due to the geometric contradiction introduced by the node 4, the nodes converge to compromised positions. Each node's position is determined relative to the root $x_1$ as follows:
+%\begin{align}\label{eq:result1}\nonumber
+%    x_2 &= x_1 + \mathbf{r}_{1},\\
+%    x_3 &= x_1 + \frac{3\mathbf{r}_1 + \mathbf{r}_2}{2},\\
+%    x_4 &= x_1 + \mathbf{r}_{2},\\
+%    x_5 &= x_1 + \frac{3\mathbf{r}_{1} + \mathbf{r}_{2}}{2} + \mathbf{r}_{3}.
+%\end{align}
+%Here, $x_3$, which is influenced by two neighbors, settles at the average of those neighbors’ preferred positions.
 
-\begin{equation}\label{eq:2dot}
-    \ddot{x} = -k_p L \dot{x}
+
+In the second simulation, we considered three nodes whose sensing graph was given as Fig.~\ref{fig:cycle}. Note that the sensing graph is stronly connected.
+%     
+% We considered the second case of an infeasible FGE that keeps linear motion. Here is a simple strongly connected graph in Fig.~\ref{fig:cycle}. 
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[>=stealth, node distance=2.0cm]
+    
+    % Define nodes
+    \node[circle, draw, fill=white!20, scale = 1.0] (1) {1};
+    \node[circle, draw, fill=white!20, scale = 1.0, right of=1] (2) {2};
+    \node[circle, draw, fill=white!20, scale = 1.0, above of=2] (3) {3};
+    
+    % Draw edges with arrows
+    \draw[->] (1) -- (2) node[midway, above] {$r_{1,2}$};
+    \draw[->] (2) -- (3) node[midway, left ] {$r_{2,3}$};
+    \draw[->] (3) -- (1) node[midway, left ] {$r_{3,1}$};
+    
+    \end{tikzpicture}
+    \caption{A simple cycle of 3 nodes.}
+    \label{fig:cycle}
+\end{figure}
+The corresponing Laplacian matrix is given by
+\begin{align*}
+L=\left[ \begin{matrix}
+	1&		0&		-1\\
+	-1&		1&		0\\
+	0&		-1&		1\\
+\end{matrix} \right].
+\end{align*} 
+Since $L$ is stronlgy connected, it has a simple zero eigenvalue, and $p=\mathbf{1}_3$ and $q = \left(\tfrac{1}{3}, \tfrac{1}{3}, \tfrac{1}{3}\right)^\top$ are the right and left eigenvectors associated with the zero eigenvalue. The desired formation was specified by $r_{1,2} = \mathbf{r}_1$, $r_{2,3} = \mathbf{r}_2$, and $r_{3,1} = \mathbf{r}_3$, where $\mathbf{r}_1$, $\mathbf{r_2}$, and $\mathbf{r}_3$ are given in \eqref{eq_r1r2r3}, which resulted in infeasible FGE. Fig.~\ref{fig:infeasible3} shows the trajectories of the nodes.
+% The result exhibits linearly moving behavior in the Fig.~\ref{fig:infeasible3}.
+Since the sensing graph was stronlgy connected and the corresponding FGE was infeasible, as expected from Theorem \ref{thm_main}, the three nodes' velocity asymptotically converge to $q^\top r = \left(0.7290, 0.5687\right)^\top$.
+%
+\begin{figure}[h]
+    % \vspace{-4mm}
+    \centering
+    % \hspace{-6mm}
+    \includegraphics[width=1\linewidth]{IMG/infeasible3_trajectory_2.eps}
+    \vspace{-8mm}
+    \caption{An infeasible FGE of 3 nodes forming a cycle at $t=5$.}
+    \label{fig:infeasible3}
+\end{figure}
+
+\vspace{-3mm}
+%
+%% Fig.~\ref{fig:infeasible3} shows the agent positions after 5 seconds. 
+%Fig.~\ref{fig:all} confirms that all nodes’ velocities and their relative positions converge. 
+%In particular, we obtained $\mathbf{v} = q^\top r = \left(0.7290, 0.5687\right)^\top$.
+%This velocity $v$ determines the relative positions of neighboring nodes as follows:
+Nonetheless the position differences among the nodes converged to constants:
+\begin{equation}\nonumber
+    \begin{split}
+        x_1 - x_3 &= \mathbf{r}_3 - \mathbf{v} = \left(-0.0746, 0.1874 \right)^\top\\
+        x_2 - x_1 &= \mathbf{r}_1 - \mathbf{v} = \left(0.2652, -0.4613 \right)^\top\\
+        x_3 - x_2 &= \mathbf{r}_2 - \mathbf{v} = \left(-0.1906, 0.2739 \right)^\top
+    \end{split}
 \end{equation}
-\noindent We assumed \(d = 1\) for simplicity then the equation \eqref{eq:2dot} has a solution: \( \dot{x}(t) = e^{-k_p Lt} \dot{x}_0 \). 
 
-This solution is applied to the cycle in Fig. \ref{fig:cycle}. Its graph Laplacian has one zero eigenvalue, so \(\dot{x}\) will converge to a steady state as time passes \cite{mirzaev_laplacian_2013}.
 
-\begin{equation}\label{eq:pqx0}
-    \lim_{t \to \infty} \dot{x}(t) = pq^\top \dot{x}_0
-\end{equation}
-\noindent where \( p \) and \( q \) are the right and left eigenvectors of \(L\) corresponding to the zero eigenvalue. \(p\) is an all-ones vector where \(p^\top q = 1\) \cite{olfati-saber_consensus_2007}. The right side of \eqref{eq:pqx0} is also a solution of the distributed optimization problem \eqref{eq:min}.
-
-As \(\dot{x}_0 = -k_p(Lx_0 - r)\), we substituted \(\dot{x}_0\) into \eqref{eq:pqx0} to get the steady state of \(\dot{x}\):
-
-\begin{equation}\label{eq:steady}
-    \dot{x} \rightarrow    q^\top (-k_p (Lx -r))\mathbf{1}
-    = k_p q^\top r \mathbf{1}
-\end{equation}
-
-\noindent Since \(q^\top L = 0\), we determined that all nodes in the cycle will converge to the same velocity \(k_p q^\top r\). If \(q^\top r = 0\), the embedding formulation is feasible. Otherwise, it is infeasible, and the cycle's derivative will converge to a non-zero velocity \(v = k_p q^\top r\), a phenomenon known as 'velocity alignment' \cite{dimarogonas_connection_2008}.
-
-From \eqref{eq:pqx0}, we found that zero eigenvalues of the graph Laplacian are crucial in determining whether the embedding formulation is feasible or not. There are two features of digraphs that induce zero eigenvalues: \textbf{Roots} and \textbf{Root Sets} \cite{niezink_consensus_2011}. Roots are nodes that have no incoming edges, resulting in zero rows in the graph Laplacian and zero eigenvalues. However, they keep their initial positions without any movement. Therefore, roots are not related to embedding infeasibility.
-
-Root sets consist of strongly connected components (SCCs) and have no incoming edges from outside. Similar to Example \ref{ex:cycle}, a subgraph of root sets generates one zero eigenvalue and non-zero rows in the graph Laplacian. Therefore, they are related to embedding infeasibility.
-
-\begin{remark}
-    If root sets are given infeasible embedding formation, the system will diverge with non-zero velocities.
-\end{remark}
-
-\subsection{Analysis of Infeasible Embedding}  
-Root sets containing infeasible embeddings gradually diverge with non-zero velocities. However, their movement is not chaotic but aligned in the same direction. We have already examined the velocity alignment of the root sets. Hence, we can state the following theorem:
-
-\begin{theorem}
-    Assume that the given digraph is a root set and its embedding formation is infeasible. Then, nodes of the root set will maintain their relative positions to each other while moving in the same direction with a non-zero velocity.
-\end{theorem}
-
-\begin{proof}
-    From \eqref{eq:steady}, the velocity of the root set will be \(\mathbf{v} = k_p q^\top r \mathbf{1}\): \(x_{ss} = \mathbf{v} t + X \) where \(x_{ss}\) is the steady state of the root set, \(X\) is the integration constant, and \(t\) is the time.  
-
-    Therefore, the relative displacements between \(x_i\) and \(x_j\) in the root set will be constant: \(x_{ss_i} - x_{ss_j} = X_i - X_j\). 
-\end{proof}
-
-For further investigation, we concentrated on the dynamics \eqref{eq:entire_dynamic} of the root set. We can rewrite the equation as:
-
-\begin{equation}
-    \mathbf{v} = -k_p L (x_{ss} - r) = -k_p (L X - r)
-    \label{eq:velocity}
-\end{equation}
-
-\noindent since \(L x_{ss} = L(\mathbf{v}t + X) = LX\).
-
-
-Reorganizing \eqref{eq:velocity} with respect to \(X\):
-\begin{equation}
-    X = L^{+} \left( r - \frac{\mathbf{v}}{k_p} \right)
-    \label{eq:X}
-\end{equation}
-
-\noindent where \(L^{+}\) is the Moore-Penrose pseudoinverse of \(L\) because of graph laplacian's singularity.
-
-\begin{remark}
-    The integration constant \(X\) of the root set is determined by the velocity \(\mathbf{v}\) and the relation vectors \(r\).
-\end{remark}
-
-Moreover, \eqref{eq:X} can be represented for each agent. The integration constant \(X_i\) of the \(i\)-th agent is:
-\begin{equation}
-    X_i = \frac{1}{|H_i|} \left( \sum_{j \in H_i} X_j + r_{i} - \frac{\mathbf{v}}{k_p} \right)
-    \label{eq:X_i}
-\end{equation}
-
-\noindent where \(|H_i|\) is the number of heads of the \(i\)-th agent. We can derive the relative formation of the cycle to apply \eqref{eq:X_i} to Example \ref{ex:cycle}. We will simulate the relative formation of the cycle in section 3. 
-
-% \subsubsection{Roots}
-% A root acts solely as head entities without any external factors. For example, in Fig. \ref{fig:DAG}, the first entity is a root node that influences the second and fourth nodes by enforcing the relation vectors \( r_{12} \) and \( r_{14} \). Since roots have no incoming edges, the graph laplacian will have zero rows corresponding to the roots:
-
-% \begin{lemma}\label{lemma:q}
-% Let the \( z \)-th row of graph laplacian (\( L_z^\top\)) be a zero row. Then the left zero eigenvector \( q \) is given by:
-% \begin{equation}\label{eq:q}
-%     q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top
-% \end{equation}
-% \noindent where \( \rho_z \) is the \( z \)-th element of \( q \).
-% \end{lemma}
-
-% \begin{proof}
-% \( L_z^\top \) is a zero row so it is linearly dependent. Therefore, we can find \( q \) to solve the equation \( q^\top L = \mathbf{0}_n^\top \). The result is \( q = \{0, \dots, 0, \rho_z = 1, 0, \dots, 0\}^\top \).
-% \end{proof}
-
-% We applied Lemma \ref{lemma:q} to graph laplacian jordan decomposition. We assumed that the first node of digraph is a root node. Then, the first row of graph laplacian is a zero row and \(T^{-1}\)'s will be \(q = \{1, 0, \dots , 0\}^\top \). 
-
-
-% \begin{theorem}
-%     Roots in a digraph generate zero laplacian eigenvalues with simple \(1 \times 1\) jordan blocks.
-% \end{theorem}
-
-% \begin{proof}
-%     Let the first row of graph laplacian be a zero row. Then, the left zero eigenvector \( q \) is given by \( q = \{1, 0, \dots , 0\} \) from Lemma \ref{lemma:q}. The jordan form of the graph laplacian is \( L = T J T^{-1} \) where \( T \) is the matrix of right eigenvectors and \( T^{-1} \) is the matrix of left eigenvectors. Since the first row of \( L \) is a zero row, the first row of \( T^{-1} \) is \( q \). 
-%     \begin{equation}\label{eq:J_1}
-%         J_1^\top = (T^{-1})_1^\top L T = q^\top L T = \mathbf{0}_N^\top T = \mathbf{0}_N^\top
-%     \end{equation}
-%     \noindent where \( J_1 \) is the first jordan block of \( L \). From \eqref{eq:J_1}, the first jordan block of \( L \) is a simple \(1 \times 1\) jordan block. Although there are other roots in the graph, they also have simple \(1 \times 1\) jordan blocks alike the first root.
-% \end{proof}
-
-% In conclusion, all roots in a digraph generate zero laplacian eigenvalues that have simple \(1 \times 1\) jordan blocks.
-
-% \subsubsection{SCCs}
-
-% Some nodes in a digraph are strongly connected to each other as they are reachable from other nodes. These nodes are called "Strongly Connected Components" (SCC). SCCs form subgraphs, where the nodes are mutually dependent. Fig. \ref{fig:DCG} illustrates an example SCCs forming a triangular cycle, where each node is both a head and a tail entity. The graph laplacian of a cycle has a one-dimensional kernel, resulting in one zero eigenvalue. The rows of the subgraph laplacian are linearly dependent, as there are no zero rows in the subgraph laplacian of SCCs. 
-
-% \begin{remark}
-%     A strongly connected subgraph in a digraph generates one zero laplacian eigenvalue. Therefore, zero eigenvalues from SCCs have \(1 \times 1\) jordan blocks. However, if a subgraph of SCCs is enforced by roots or other subgraphs of SCCs, its laplacian rows lose linear dependence as it has no zero eigenvalues. We named it as "Rooted SCCs". 
-% \end{remark}
-
-% Finally, we can rewrite \eqref{eq:jordan_decom} into:
-% \begin{equation}
-%     \dot{x}(t) \rightarrow \left( \sum_{n=1}^m p_n e^{-\lambda_n t} q_n^\top \right) \dot{x}_0 = \left( \sum_{n=1}^m p_n q_n^\top \right) \dot{x}_0
-%     \label{eq:solution}
-% \end{equation}
-
-% The solution \eqref{eq:solution} approaches a constant over time, where \( p_n \) and \( q_n \) are the right and left eigenvectors corresponding to \( \lambda_n \)  \cite{mesbahi_graph_2010}. 
-
-% \subsection{Convergence Analysis}
-
-% Given these features, we organized several cases of graphs for knowledge graph embedding: \textbf{Acyclic Digraphs} and \textbf{Cyclic Digraphs}.
-
-% \begin{figure}[h] % 'h' specifies placement (here)
-%     \centering
-%     \begin{tikzpicture}[>=stealth, node distance=1.5cm]
-    
-%     % Define nodes
-%     \node[circle, draw, fill=white!20, scale = 1.5] (1) {1};
-%     \node[circle, draw, fill=white!20, scale = 1.5, right of=1] (2) {2};
-%     \node[circle, draw, fill=white!20, scale = 1.5, below of=2] (3) {3};
-%     \node[circle, draw, fill=white!20, scale = 1.5, left of=3] (4) {4};
-%     \node[circle, draw, fill=white!20, scale = 1.5, below of=3] (5) {5};
-    
-%     % Draw edges with arrows
-%     \draw[->] (1) -- (2) node[midway, below] {$r_{12}$};
-%     \draw[->] (2) -- (3) node[midway, left] {$r_{23}$};
-%     \draw[->] (1) -- (4) node[midway, right] {$r_{14}$};
-%     \draw[->] (3) -- (5) node[midway, left] {$r_{35}$};
-%     \draw[->] (4) -- (3) node[midway, above] {$r_{43}$};
-    
-%     % Add labels to edges (optional)
-    
-%     \end{tikzpicture} 
-%     \caption{A simple acyclic digraph with 5 nodes.}
-%     \label{fig:DAG}
-%     \end{figure}
-% \subsubsection{Acyclic Digraphs}
-
-% We defined an acyclic digraph as having some roots and rooted SCCs. These roots will strongly stabilize embedding result. 
-
-% \begin{theorem}
-%     Acyclic digraphs always converge to a steady state.
-% \end{theorem}
-
-% \begin{proof}
-% The root nodes \( x_n \) experience no external forces, so \( \dot{x}_n = 0 \). Furthermore, from Lemma \ref{lemma:q}, the left eigenvector \( q \) is \( \{1, 0, \dots, 0\} \). Substituting these into \eqref{eq:solution}, we found that the velocities of all agents goes to zero over time. 
-% \begin{equation}\label{eq:0_n}
-%     \dot{x} \rightarrow \sum_{n=1}^m p_n q_n^\top \dot{x}_0 = \sum_{n=1}^m (p_n \times 0) = \mathbf{0}_n
-% \end{equation}
-% This implies that the embedding of the acyclic digraph will converge to a steady state.
-% \end{proof}
-
-
-
-% \begin{figure}[h]
-% \centering
-% \begin{tikzpicture}[>=stealth, node distance=1.5cm]
-
-% % Define nodes
-% \node[circle, draw, fill=white!20, scale = 1.5] (1) {1};
-% \node[circle, draw, fill=white!20, scale = 1.5, right of=1] (2) {2};
-% \node[circle, draw, fill=white!20, scale = 1.5, below of=2] (3) {3};
-
-% % Draw edges with arrows
-% \draw[->] (1) -- (2) node[midway, below] {$r_{12}$};
-% \draw[->] (2) -- (3) node[midway, left] {$r_{23}$};
-% \draw[->] (3) -- (1) node[midway, left] {$r_{31}$};
-
-% % Add labels to edges (optional)
-
-
-% \end{tikzpicture}
-% \caption{A simple cycle of 3 SCCs.}
-% \label{fig:DCG}
-% \end{figure}
-
-
-
-% \subsubsection{Cyclic Digraphs}
-
-% We defined cyclic digraphs that contain no roots and all vertices in a cyclic digraph belong to a spanning tree so that only one zero laplacian eigenvalue appears. Its corresponding right eigenvector \( p \) is \( \mathbf{1}_n \) \cite{olfati-saber_consensus_2007}. \( k \) is arbitary and satisfies \( q^\top \dot{x}_0 = q^\top (-Lx(0) + r) = q^\top r = v \) (since \( q^\top L = 0 \)). In the case of cyclic digraphs, \eqref{eq:0_n} is replaced by \eqref{eq:v_n}.
-
-% \begin{equation}\label{eq:v_n}
-%     \dot{x} \rightarrow pq^\top \dot{x}_0 = \mathbf{1}_n \times v = \mathbf{v}_n
-% \end{equation}
-
-% \noindent Every agent in the cyclic graph acquires a uniform velocity \( v \). This behavior is known as \textbf{Velocity Alignment} \cite{dimarogonas_connection_2008}. If \( v = 0 \), the system will converge and the agents will reach \( x^* \). Otherwise, the agents diverge along linear paths:
-
-% \[
-% x(t) = \mathbf{v}_n t + X 
-% \]
-
-% \noindent while \( X \) is a constant vector from integration.
-
-
-% Even though the system remains unstable, the distances between heads and tails become steady because \( \dot{x}_i = \dot{x}_j \). Accordingly, the difference between agent $i$ and $j$ is organized as,
-% \[
-% x_i - x_j = (vt + X_i) - (vt +X_j) = X_i-X_j
-% \]
-% %We define this invariant relative formation $X$ as the embedding result in diverging cases.
-
-% To investigate more specifically, we concentrated on \eqref{eq:total_dynamic}. As the system works for a while, all velocities will become closed to \(v\). 
-
-% \begin{equation}\label{eq:findX}
-% \begin{split}
-%     \dot{x} &= k_p(Lx - r) \\
-%    \rightarrow  \mathbf{v}_n &= k_p(L(\mathbf{v}_nt + X) - r) \\
-%            &= k_p(LX - r)  \\ 
-%  \therefore X &= L^+ (r - \frac{\mathbf{v}_n}{k_p})
-% \end{split}
-% \end{equation}
-
-
-
-% Since \(q=\mathbf{1}_n\) is a right eigenvector of \(\lambda_1 = 0\), only \(X\) has left. We determined \( X \) from \eqref{eq:findX}, where \( + \) denotes the pseudo-inverse because the graph laplacian is singular. Followings are agent-based equations with respect to \(X\):
-
-% \begin{remark}
-%     The embedding results of cyclic digraphs are determined by \(X\), which is the relative formation of the agents. In addition, we orgainzed the relative formation of each agent \(X_i\) as following:
-%     \begin{equation}
-%         \begin{split}
-%         \dot{x}_i &= k_p(\sum_{j \in \mathcal{H}_i} (x_i - x_j) -r_i) \\
-%         \rightarrow v &= k_p(\sum_{j \in \mathcal{H}_i} (X_i - X_j) - r_i) \\
-%         X_i &= \frac{1}{|\mathcal{H}_i|}(\sum_{j \in \mathcal{H}_i} X_j +r_i-\frac{v}{k_p})
-%         \end{split}
-%     \end{equation}
-% \end{remark}
-
-
-
-% \subsection{Undirectional Embedding} 
-% We got inspiration from TransE to organize directional embedding formations of knowledge graphs. Tail entities are only enforced to move desired relative positions while heads receive no external forces. However, as we already mentioned, the embedding results will diverge for several cases because of unrooted SCCs. To stabilize them, we tried a new princeple: undirectional embedding.
-% \begin{equation}
-%     \dot{x}_i = k_p \sum_{j \in \mathcal{N}_i} (x_i - x_j - r_{ji})
-% \end{equation}
-
-% We expand the range of the node's neighbors to include its tails. That makes the system consider reverse relations. \( (t, -r, h) \). For reverse relations, we added a new condition: 
-
-% \[ r_{ij} = -r_{ji} \]
-
-% \noindent This condition indicates that the relation vector \( r_{ij} \) is the negative of \( r_{ji} \). The new condition ensures that the system is stable and converges to a steady state.
-
-% A connected undirected graphs always has a symmetry graph laplacian that involves only one zero eigenvalue and \( p = 1_n \) \cite{olfati-saber_consensus_2007}. According to \eqref{eq:2dot} and \eqref{eq:solution}, all agent's velocity also converge to \(q^\top r\) where \(q = \mathbf{1}_n / N \). 
-
-% \[
-% q^\top r = \frac{1}{N} \sum_{i = 1}^N r_i = 0
-% \]
-
-% \noindent Its result is finally zero. (\(\because r_{ji} = -r_{ij}\)). Consequently, undirected knowledge graphs have settled embedding results. 
-
-% \section{Simulation}
-% We conducted computer simulations of embedding formations for several knowledge graphs. These simulations focus on how agents move over time, providing complementary insights to our main analysis.
-
-% The embedding space is composed of \(x\) and \(y\) coordinates, with all entities starting from random initial positions. The agents update their positions using the Euler method with a step size of \(0.001\). The simulation ends when the agents reach a steady state, where the change in position is negligible. The results are visualized using \textbf{MATLAB}.
-
-% \begin{figure}[thb]
-%     \begin{center}
-%     \includegraphics[width=7cm]{IMG/AG_simul3.png}
-%     \caption{A converging acyclic digraph composed of 5 entities.}
-%     \label{fig:DAGstate}
-%     \end{center}
-%     \vspace{-0mm}
-% \end{figure}
-
-
-
-
-% First, we performed the embedding of the graph shown in Fig. \ref{fig:DAG}. The five entities converged to their respective embedding points as illustrated in Fig. \ref{fig:DAGstate}. Entity \(E_1\) remained at its initial position since it is the root node. The other four entities adjusted their positions relative to this anchor point.
-% \begin{equation}\label{eq:result1}
-% \begin{split}
-%     E_2 &= E_1 + r_{12}\\
-%     E_3 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2}\\
-%     E_4 &= E_1 + r_{14}\\
-%     E_5 &= E_1 + \frac{r_{12}+r_{23}+r_{14}+r_{43}}{2} + r_{35}
-% \end{split}
-% \end{equation}
-
-
-
-% \noindent The outcome \eqref{eq:result1} accomplishes \(Lx^* - r = 0\). 
-
-
-% Fig. \ref{fig:velo_align} shows the velocity alignment of a cyclic digraph with 3 entities. They initiated with distinct state but gradually made consensus so that the agents may keep moving in parallel. This behavior is a characteristic of cyclic digraphs and demonstrates how the embedding process can be analyzed using formation control principles.
-
-
-
-% \begin{figure}[thb]
-%     \begin{center}
-%     \includegraphics[width=7cm]{IMG/node3_velo_align_4.png}
-%     \caption{A cyclic digraph composed of 3 entities. Velocity alignment occurs.}
-%     \label{fig:velo_align}
-%     \end{center}
-%     \vspace{-0mm}
-% \end{figure}
-
-% \begin{figure*}[h] % 'h' specifies placement (here)
-%     \centering
-%     \begin{tikzpicture}[>=stealth, node distance=1.5cm]
-    
-%     % Define nodes
-%     % \foreach \i in {1,...,50} {
-%     %     \node[circle, draw, fill=white!20, scale=1.5] (\i) at (0,0) {\i};
-%     % }
-%     \foreach \i in {1,...,50} {
-%         \node[circle, draw, fill=white!20, scale=0.5] (\i) at ({360/50 * (\i-1)}:4cm) {\i};
-%     }
-    
-%     % Draw edges with arrows
-%     \foreach \i in {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47} {
-%         \draw[->] (1) -- (\i);
-%     }
-
-%     \foreach \i in {2,...,50} {
-%         \foreach \j in {2,...,50} {
-%             \pgfmathtruncatemacro{\multiple}{\i*\j}
-%             \ifnum\multiple<51
-%                 \draw[->] (\i) -- (\multiple);
-%             \fi
-%         }
-%     }
-%     % Add labels to edges (optional)
-    
-%     \end{tikzpicture}
-%     \caption{Acyclic digraph of 50 nodes.}
-%     \label{fig:50nodes}
-% \end{figure*}
-
-
-
-
-
-% \begin{figure*}[h]
-%     \begin{center}
-%     \begin{subfigure}[b]{0.45\textwidth}
-%         \includegraphics[width=\textwidth]{IMG/ag_50nodes.png}
-%         \caption{Embedding of an acyclic digraph with 50 nodes.}
-%         \label{fig:ag_50nodes}
-%     \end{subfigure}
-%     \hfill
-%     \begin{subfigure}[b]{0.45\textwidth}
-%         \includegraphics[width=\textwidth]{IMG/ug_50nodes.png}
-%         \caption{Embedding of an undirected graph with 50 nodes.}
-%         \label{fig:ug_50nodes}
-%     \end{subfigure}
-%     \caption{Embedding results for different types of graphs.}
-%     \end{center}
-%     % \vspace{-0mm}
-% \end{figure*}
-
-% Next, we simulated the embedding of a larger acyclic digraph with 50 nodes, as shown in Fig. \ref{fig:50nodes}. The embedding results are illustrated in Fig. \ref{fig:ag_50nodes}. We have a root node \(E_1\) that influences the other prime number nodes. Moreover the other numbered nodes have a role of heads that enforce their multiples. For example, \(E_2\) is enforced by \(E_1\) and \(E_2\) have out-degree relations to other even numbered nodes: \(E_4, E_6, E_8, \ldots, E_{50}\). Other nodes also have directed relations to their multiples. 
-
-% The embedding results show that all entities converged to their respective positions, confirming the stability of the embedding process for the acyclic digraph.
-
-% Finally, we simulated the embedding of an undirected version of the former graph with 50 nodes. The results are shown in Fig. \ref{fig:ug_50nodes}. All entities converged to their respective positions, confirming the stability of the embedding process for the undirected graph.
-
-
-
-
-
-
-
-
-% % \begin{figure*}[h] % 'h' specifies placement (here)
-% %     \centering
-% %     \begin{tikzpicture}[nodes={circle, draw, fill=white!20, scale=1.0},>=Stealth, every edge/.style={draw, ->, thick}]
-% %         \graph[spring layout, node sep=20mm, sibling sep=50mm] {
-% %             1 -> {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47},
-% %             2 -> {4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50},
-% %             3 -> {6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48},
-% %             4 -> {8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48},
-% %             5 -> {10, 15, 20, 25, 30, 35, 40, 45, 50},
-% %             6 -> {12, 18, 24, 30, 36, 42, 48},
-% %             7 -> {14, 21, 28, 35, 42, 49},
-% %             8 -> {16, 24, 32, 40, 48},
-% %             9 -> {18, 27, 36, 45},
-% %             10 -> {20, 30, 40, 50},
-% %             11 -> {22, 33, 44},
-% %             12 -> {24, 36, 48},
-% %             13 -> {26, 39},
-% %             14 -> {28, 42},
-% %             15 -> {30, 45},
-% %             16 -> {32, 48},
-% %             17 -> {34},
-% %             18 -> {36},
-% %             19 -> {38},
-% %             20 -> {40},
-% %             21 -> {42},
-% %             22 -> {44},
-% %             23 -> {46},
-% %             24 -> {48},
-% %             25 -> {50}
-% %         };
-
-% %     \end{tikzpicture}
-% %     \caption{Acyclic digraph of 50 nodes.}
-% %     \label{fig:50nodes}
-% % \end{figure*}
-
-% \section{Conclusion}
-% In this paper, we have proposed a novel integration of Knowledge Graph Embedding (KGE) with distributed optimization and formation control. 
-% By reformulating the TransE optimization problem as a distributed optimization task, we demonstrated how multi-agent systems can effectively learn embeddings while interacting only with neighboring entities. 
-% This approach leverages graph-theoretical concepts, specifically the properties of the graph Laplacian, to analyze the convergence and stability of the embedding process.
-% Our results highlight that TransE, when interpreted through the lens of distributed optimization, can be seen as a formation control problem. 
-% The equivalence between the gradient descent dynamics in distributed optimization and the control laws in formation control allows for a deeper understanding of the embedding process in multi-agent systems.
-% The use of the in-degree Laplacian matrix \(L\) provides valuable information on the stability and convergence behavior of the embedding.
-% Overall, this work bridges the gap between knowledge graph embedding, distributed optimization, and formation control, offering a comprehensive framework for understanding and improving the performance of KGE methods in decentralized and multi-agent environments.
-
-% In future work, we plan to explore more complex graph structures and investigate the impact of different graph properties on the stability and convergence of the embedding process. Additionally, we aim to extend our analysis to other KGE models and evaluate the effectiveness of distributed optimization in learning embeddings for various types of knowledge graphs.
-
-
-\bibliographystyle{IEEEtran}
-\bibliography{kge.bib}
-
-\end{document}
+%\begin{figure}% [h]
+%    \vspace{-0mm}
+%    \centering
+%    \includegraphics[width=1\linewidth]{IMG/Infeasible3all_2.eps}
+%    \vspace{-5mm}
+%    \caption{Velocities of agents $v_i$ and difference $x_i-x_j$ between neighbors until $t=5 $ (sec).}
+%    \label{fig:all}
+%\end{figure}
+
+   
+
+
+
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[>=stealth, node distance=1.0cm]
+        %% 노드 정의
+        \node[circle, draw, fill=white!20, scale=1.0] (1) at (1,4.25) {1};
+        \node[circle, draw, fill=white!20, scale=1.0] (2) at (0,3.75) {2};
+        \node[circle, draw, fill=white!20, scale=1.0] (3) at (1,3) {3};
+        \node[circle, draw, fill=white!20, scale=1.0] (4) at (2,2) {4};
+        
+        \node[circle, draw, fill=white!20, scale=1.0] (8) at (2.5,3.0) {8};
+        \node[circle, draw, fill=white!20, scale=1.0, above of=8] (5) {5};
+        \node[circle, draw, fill=white!20, scale=1.0, right of=5] (6) {6};
+        \node[circle, draw, fill=white!20, scale=1.0, right of=8] (7) {7};
+        
+        \node[circle, draw, fill=white!20, scale=1.0] (9) at (-1,1.5) {9};
+        \node[circle, draw, fill=white!20, scale=1.0] (10) at (0.5,2) {10};
+        \node[circle, draw, fill=white!20, scale=1.0] (11) at (1.5,1) {11};
+        \node[circle, draw, fill=white!20, scale=1.0] (12) at (0,0.5) {12};
+        
+        \node[circle, draw, fill=white!20, scale=1.0] (13) at (3,1.5) {13};
+        \node[circle, draw, fill=white!20, scale=1.0] (14) at (4,1) {14};
+        \node[circle, draw, fill=white!20, scale=1.0] (15) at (3.0, 0.0) {15};
+        \node[circle, draw, fill=white!20, scale=1.0] (16) at (1.5,0) {16};
+        
+        %% 간선
+        \draw[->] (1) -- (2);
+        \draw[->] (2) -- (3);
+        \draw[->] (1) -- (3);
+        \draw[->] (3) -- (4);
+        
+        \draw[->] (8) -- (4);
+        \draw[->] (5) -- (6);
+        \draw[->] (6) -- (7);
+        \draw[->] (7) -- (8);
+        \draw[->] (8) -- (5);
+        
+        \draw[->] (9)  -- (10);
+        \draw[->] (10) -- (11);
+        \draw[->] (10) -- (12);
+        \draw[->] (11) -- (12);
+        
+        \draw[->] (3)  -- (10);
+        \draw[->] (4)  -- (13);
+        \draw[->] (13) -- (14);
+        
+        \draw[->] (15) -- (13);
+        \draw[->] (14) -- (15);
+        \draw[->] (12) -- (16);
+        \draw[->] (15) -- (16);
+    \end{tikzpicture}
+    \vspace{0mm}
+    \caption{A sensing graph of 16 nodes.}
+    \label{fig:16_graph}
+\end{figure}
+% \vspace{-mm}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\linewidth]{IMG/16_rng14_2.eps}
+    \vspace{-8mm}
+    \caption{Position of the nodes at $t=20$}
+    \label{fig:16embedding}
+\end{figure}
+
+Finally, we considered the formation control of 16 nodes whose sensing graph is shown in Fig.~\ref{fig:16_graph}.
+This graph represents several features discussed in the previous sections.
+It has two roots (nodes 1 and 9) and a root-like induced subgraph composed of nodes 5, 6, 7, and 8.
+We used the following vectors to describe the desired formation of the nodes:
+\begin{align*}
+& \mathbf{r}_1 = \left(0.0510, 0.9987 \right)^\top, \; 
+\mathbf{r}_2 = \left(0.6015, -0.7989\right)^\top,\\
+& \mathbf{r}_3 = \left(0.0720, -0.9974\right)^\top, \; 
+\mathbf{r}_4 = \left(-0.3839, 0.9234\right)^\top,\\
+& \mathbf{r}_5 = \left(0.1393, -0.9903\right)^\top.
+\end{align*}
+The desired formation is set as follows:
+$
+r_{1,2} = r_{8,5} = r_{9,10}=r_{15,13} = \mathbf{r}_1, \quad
+r_{1,3} = r_{5,6} = r_{10,11} = r_{13,14} = \mathbf{r}_2, \quad
+r_{2,3} = r_{6,7} = r_{10,12} = r_{14, 15} = \mathbf{r}_3, \quad
+r_{3,4} = r_{7,8} = r_{11,12} = r_{12,16} = \mathbf{r}_4, \quad
+r_{3,10} = r_{4,13} = r_{8,4} = r_{15,16} = \mathbf{r}_5. \quad
+$
+
+Fig.~\ref{fig:16embedding} shows the trajectories of the nodes for $15\le t \le 20$. In the figure, the $\times$ marks indicate the nodes' positions at $t=15$. As shown in the figure, some nodes continued moving without converging to staionary points.
+Since nodes 5,6,7, and 8 form a root-like induced sugraph, they move with a common velocity as indicated in Theorem \ref{thm_main_2}. % Due the the movement of the nodes, other nodes also moved as shown in Fig.~\ref{fig:16velocities}. 
+%
+%It can be anticipated that the root-like induced subgraph $G_R = \{5,6,7,8\}$ will align with a nonzero velocity if its formation is infeasible. However, the other nodes also move as time progresses. Fig.~\ref{fig:16velocities} demonstrates multiple velocity alignment.
+% 
+The common velocity of nodes 5,6,7, and 8 is given by  
+$\mathbf{v}_1 = \left(r_{5,6}+r_{6,7}+r_{7,8}+r_{8,5}\right)/4 = \left(\mathbf{r}_2+\mathbf{r}_3 +\mathbf{r}_4+\mathbf{r}_1\right)/4=
+(0.0851, 0.0315)^\top$. 
+
+%Node~4’s velocity is $\mathbf{v}_2 = \mathbf{v}_1 / 2$.
+%We hypothesize that node~4 is influenced by both the root and $G_R$, resulting in an average of their effects.
+%Nodes $\{13,14,15\}$ align with $\mathbf{v}_2$ because they are affected solely by node~4.
+%Node~16 has two neighbors, node~12 (which has settled) and node~15 (which is moving); thus node~16 moves with $\mathbf{v}_3 = \mathbf{v}_2 / 2$ due to these dual influences.
+%Based on these results, we plan to explore the FGE of general and more complex graphs in future work.
+
+% \vspace{-1.5mm}
+
+\section{Conclusion}	\label{sec_conclusion}
+In this paper, we investigated formation control problem for single-integrator nodes. 
+% Motivated by knowledge graph embedding, we first formulated the displacement- and distance-based formation control problems in a unified manner using the framework of the formation graph embedding. 
+Motivated by knowledge graph embedding, we first formulated the displacement-based formation control problems in a unified manner using the framework of the formation graph embedding. 
+% Furthermore, we demonstrated that the well-established displacement- and distance-based formation control laws in existing literature can be derived through the application of distributed optimization techniques to the FGE.
+Furthermore, we demonstrated that the well-established displacement-based formation control laws in existing literature can be derived through the application of distributed optimization techniques to the FGE.
+Subsequently, we defined the feasibility of the FGE based on whether the constraints determining the desired formation shape are realizable. In particular, we analyzed the behavior of nodes when the FGE is infeasible. As a direction for future work, we aim to extend the results of this paper to more general cases where the sensing graph is a weakly connected graph. 
+
+
+% \begin{ack}
+% This work was supported by Korea Institute of Planning and Evaluation for Technology in Food, Agriculture and Forestry(IPET) through High Value-added Food Technology Development Program, funded by Ministry of Agriculture, Food and Rural Affairs(MAFRA)(RS-2022-IP322054).
+% \end{ack}
+
+% \bibliographystyle{elsarticle-harv}        % Include this if you use bibtex 
+\bibliography{kge}             % bib file to produce the bibliography
+                                                     % with bibtex (preferred)
+                                                   
+\end{document} 
