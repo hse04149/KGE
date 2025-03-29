@@ -136,6 +136,7 @@ A tree is a graph such that every node except for a node called the root of the 
 % A spanning tree (spanning forest) of $G$ is a tree (forest) that is a spanning subgraph of $G$. 
 A spanning tree of $G$ is a tree that is a spanning subgraph of $G$. A path in $G$ is a sequence $i_{1},\ldots,i_{k}$ of nodes such that $(i_{s}, i_{s-1}) \in E$ for $s = 1,\ldots,k-1$. If there is a path from $i$ to $j$, we say $j$ can be reached from $i$. 
  A weak path in ${G}$ is a sequence $i_{1},\ldots, i_{k}$ of nodes such that either $(i_{s}, i_{s-1}) \in {E}$ or $(i_{s-1}, i_{s}) \in {E}$  for $s = 1,\ldots,k-1$. A graph ${G}$ is strongly connected (weakly connected) if there exists a path (weak path) from $i$ to $j$ for any distinct nodes $i,j \in {G}$. 
+ For example, a simple cycle with 3 or more nodes is strongly connected but not weakly connected.
 
 % Directed graph를 기본으로 하는 논문들도 많으니 따로 아래 내용을 표기하지는 않아도 될 것 같습니다.
 % {\color{red}
@@ -409,7 +410,7 @@ Finally, the following theorem states a condition under which the nodes converge
 \begin{theorem} \label{thm_main_2}
 For the displacement-based formation control system \eqref{eq_displacement_1d}, assume the following:
 \begin{itemize}
-\item $G$ has a spanning tree.
+\item $G$ has a spanning tree that includes one root.
 \item There exists no root-like induced subgraph in $G$.
 \item The FGE is infeasible.
 \end{itemize}
@@ -422,7 +423,7 @@ Since $G$ has a spanning tree, it follows from \textit{Lemma \ref{lemma_Laplacia
 \begin{align*}
 \lim_{t\rightarrow \infty} \dot{x}(t) &= p_1 q_1^\top r = q_1^\top r  \mathbf{1}_N.
 \end{align*}
-This shows that the velocities of all the nodes converge to an identical value. Without loss of generality, we assume that node $1$ is a root. Then $\dot{x}_1 = 0$, which shows that all the nodes converge to stationary points. 
+This shows that the velocities of all the nodes converge to an identical value. Without loss of generality, we assume that node $1$ is a root. It receives no external forces, then $\dot{x}_1 = 0$, which shows that all the nodes converge to stationary points. 
 $\blacksquare$
 \end{pf}
 
@@ -490,21 +491,22 @@ In the first simulation, we examined the behavior of five nodes with an infeasib
 
 \begin{figure}[h]
     \centering
-    \vspace{-2mm}
+    % \vspace{-7mm}
     \includegraphics[width=0.9\linewidth]{IMG/feasible5_trajectory_2.eps}
     \vspace{-5mm}
     \caption{A feasible FGE of 5 nodes. Red numbers indicate initial positions of nodes.}
     \label{fig:feasible}
+    % \vspace{-5mm}
 \end{figure}
-We used the following vectors
-\begin{subequations} \label{eq_r1r2r3}
-\begin{align} 
-\mathbf{r}_1 &= \left(0.9942, 0.1074\right)^\top, \\
-\mathbf{r}_2 &= \left(0.5384, 0.8427\right)^\top, \\
-\mathbf{r}_3 &= \left(0.6545, 0.7561\right)^\top.
-\end{align}
-\end{subequations}
-to define the desired relative positions. All three vectors have a unit norm.
+We used the following vectors: $\mathbf{r}_1 = (0.9942, 0.1074)^\top$, $\mathbf{r}_2 = (0.5384, 0.8427)^\top$ and $\mathbf{r}_3 = (0.6545, 0.7561)^\top$, to define the desired relative positions. All three vectors have a unit norm.
+% \begin{subequations} \label{eq_r1r2r3}
+% \begin{align} 
+% \mathbf{r}_1 &= \left(0.9942, 0.1074\right)^\top, \\
+% \mathbf{r}_2 &= \left(0.5384, 0.8427\right)^\top, \\
+% \mathbf{r}_3 &= \left(0.6545, 0.7561\right)^\top.
+% \end{align}
+% \end{subequations}
+
 
 Fig. 2 illustrates the trajectories of five nodes when the desired positions are set as follows:
 $
@@ -526,26 +528,28 @@ Since the FGE corresponding to the desired positions is feasible, the nodes form
 %Fig.~\ref{fig:feasible} illustrates that nodes 1, 2, 3, and 4 form a parallelogram via the displacement relations $\mathbf{r}_1$ and $\mathbf{r}_2$, while node 5 is located at a displacement of $\mathbf{r}_3$ from node 3. Since there is no geometric inconsistency, this configuration represents a feasible FGE.
 %
 \begin{figure}[h]
-    % \vspace{-2mm}
     \centering
+    % \vspace{-3mm}
     \includegraphics[width=0.9\linewidth]{IMG/infeasible5_trajectory_2.eps}
     \vspace{-5mm}
     \caption{An infeasible FGE of 5 nodes. Red numbers indicate initial positions of nodes.}
     \label{fig:infeasible5}
+    % \vspace{-3mm}
 \end{figure}
 
+% \vspace{-5mm}
 Fig. 3 illustrates the trajectories of five nodes when the desired positions are set as follows:
 $
 r_{1,2}=r_{2,3}=r_{3,4}=\mathbf{r}_1,\; r_{1,4}=\mathbf{r}_2,\; r_{3,5}=\mathbf{r}_3.
 $
 Compared to the desired positions corresponding to Fig. 2, only $r_{2,3}$ has been changed from $\mathbf{r}_2$ to $\mathbf{r}_1$.
-Due to this change, the FGE of these nodes becomes infeasible, and the desired positions were not achieved. However, as expected by Theorem \ref{thm_main_2}, the nodes converged to stationary points. Specifically, each node's position was determined relative to the root $x_1$ as follows:
-\begin{align}\label{eq:result1}
-\nonumber    x_2 &= x_1 + \mathbf{r}_{1},\\ 
-\nonumber    x_3 &= x_1 + \frac{3\mathbf{r}_1 + \mathbf{r}_2}{2},\\ 
-\nonumber    x_4 &= x_1 + \mathbf{r}_{2},\\ 
-\nonumber    x_5 &= x_1 + \frac{3\mathbf{r}_{1} + \mathbf{r}_{2}}{2} + \mathbf{r}_{3}. 
-\end{align}
+Due to this change, the FGE of these nodes becomes infeasible because nodes 1--3 are expected to form a line parallel to $\mathbf{r}_1$, but the presence of node 4 makes this impossible. Therefore, the desired positions were not achieved. However, as predicted by Theorem \ref{thm_main_2}, the nodes converged to stationary points. Specifically, each node's position was determined relative to the root $x_1$ as follows: $x_2 = x_1 + \mathbf{r}_{1}, x_3 = x_1 + \frac{3\mathbf{r}_1 + \mathbf{r}_2}{2}, x_4 = x_1 + \mathbf{r}_{2}, x_5 = x_1 + \frac{3\mathbf{r}_{1} + \mathbf{r}_{2}}{2} + \mathbf{r}_{3}.$
+% \begin{align}\label{eq:result1}
+% \nonumber    x_2 &= x_1 + \mathbf{r}_{1},\\ 
+% \nonumber    x_3 &= x_1 + \frac{3\mathbf{r}_1 + \mathbf{r}_2}{2},\\ 
+% \nonumber    x_4 &= x_1 + \mathbf{r}_{2},\\ 
+% \nonumber    x_5 &= x_1 + \frac{3\mathbf{r}_{1} + \mathbf{r}_{2}}{2} + \mathbf{r}_{3}. 
+% \end{align}
 % Here, $x_3$, which is influenced by two neighbors, settles at the average of those neighbors’ preferred positions.
 
 
@@ -599,11 +603,11 @@ Since $L$ is stronlgy connected, it has a simple zero eigenvalue, and $p=\mathbf
 Since the sensing graph was stronlgy connected and the corresponding FGE was infeasible, as expected from Theorem \ref{thm_main}, the three nodes' velocity asymptotically converge to $q^\top r = \left(0.7290, 0.5687\right)^\top$.
 %
 \begin{figure}[h]
-    % \vspace{-4mm}
     \centering
+    % \vspace{-6mm}
     % \hspace{-6mm}
     \includegraphics[width=1\linewidth]{IMG/infeasible3_trajectory_2.eps}
-    \vspace{-8mm}
+    \vspace{-5mm}
     \caption{An infeasible FGE of 3 nodes forming a cycle at $t=5$.}
     \label{fig:infeasible3}
 \end{figure}
@@ -633,9 +637,11 @@ Nonetheless the position differences among the nodes converged to constants:
 %    \label{fig:all}
 %\end{figure}
 
-   
-
-
+Finally, we considered the formation control of 16 nodes whose sensing graph is shown in Fig.~\ref{fig:16_graph}.
+This graph represents several features discussed in the previous sections.
+It has two roots (nodes 1 and 9) and a root-like induced subgraph composed of nodes 5, 6, 7, and 8.
+We used the following vectors to describe the desired formation of the nodes:
+$\mathbf{r}_1 = (0.0510, 0.9987)^\top$, $\mathbf{r}_2 = (0.6015, -0.7989)^\top$, $\mathbf{r}_3 = (0.0720, -0.9974)^\top$, $\mathbf{r}_4 = (-0.3839, 0.9234)^\top$ and $\mathbf{r}_5 = (0.1393, -0.9903)^\top$.
 
 \begin{figure}[h]
     \centering
@@ -691,27 +697,26 @@ Nonetheless the position differences among the nodes converged to constants:
     \caption{A sensing graph of 16 nodes.}
     \label{fig:16_graph}
 \end{figure}
-% \vspace{-mm}
+% \vspace{-5mm}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=1.0\linewidth]{IMG/16_rng14_2.eps}
+    % \vspace{-2mm}
+    \includegraphics[width=1\linewidth]{IMG/16_rng14_2.eps}
     \vspace{-8mm}
     \caption{Position of the nodes at $t=20$}
     \label{fig:16embedding}
 \end{figure}
 
-Finally, we considered the formation control of 16 nodes whose sensing graph is shown in Fig.~\ref{fig:16_graph}.
-This graph represents several features discussed in the previous sections.
-It has two roots (nodes 1 and 9) and a root-like induced subgraph composed of nodes 5, 6, 7, and 8.
-We used the following vectors to describe the desired formation of the nodes:
-\begin{align*}
-& \mathbf{r}_1 = \left(0.0510, 0.9987 \right)^\top, \; 
-\mathbf{r}_2 = \left(0.6015, -0.7989\right)^\top,\\
-& \mathbf{r}_3 = \left(0.0720, -0.9974\right)^\top, \; 
-\mathbf{r}_4 = \left(-0.3839, 0.9234\right)^\top,\\
-& \mathbf{r}_5 = \left(0.1393, -0.9903\right)^\top.
-\end{align*}
+
+% \begin{align*}
+% & \mathbf{r}_1 = \left(0.0510, 0.9987 \right)^\top, \; 
+% \mathbf{r}_2 = \left(0.6015, -0.7989\right)^\top,\\
+% & \mathbf{r}_3 = \left(0.0720, -0.9974\right)^\top, \; 
+% \mathbf{r}_4 = \left(-0.3839, 0.9234\right)^\top,\\
+% & \mathbf{r}_5 = \left(0.1393, -0.9903\right)^\top.
+% \end{align*}
+
 The desired formation is set as follows:
 $
 r_{1,2} = r_{8,5} = r_{9,10}=r_{15,13} = \mathbf{r}_1, \quad
@@ -729,6 +734,7 @@ Since nodes 5,6,7, and 8 form a root-like induced sugraph, they move with a comm
 The common velocity of nodes 5,6,7, and 8 is given by  
 $\mathbf{v}_1 = \left(r_{5,6}+r_{6,7}+r_{7,8}+r_{8,5}\right)/4 = \left(\mathbf{r}_2+\mathbf{r}_3 +\mathbf{r}_4+\mathbf{r}_1\right)/4=
 (0.0851, 0.0315)^\top$. 
+Moreover, node 4 and nodes 13--16 seems to be influenced by the subgraph of nodes 5--8 to move constantly. This phenomenon will be further investigated in future work.
 
 %Node~4’s velocity is $\mathbf{v}_2 = \mathbf{v}_1 / 2$.
 %We hypothesize that node~4 is influenced by both the root and $G_R$, resulting in an average of their effects.
