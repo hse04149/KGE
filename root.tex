@@ -225,15 +225,8 @@ which is known as TransE \citep{bordes_translating_2013}. Details on knowledge g
 
 \subsection{Formation graph embedding}
 
-Formation control refers to the coordination of multiple mobile agents (e.g., robots, drones, or autonomous vehicles) to maintain a specific geometric arrangement while moving or performing tasks. The goal is to control the positions and orientations of agents using only local sensing and communication. As discussed in \cite{oh2015survey}, there is a main approach to formation control %there are two main approaches to formation control:
-\begin{itemize}
-% \item Position-based control: Agents directly regulate their positions with respect to a global coordinate system.
-\item Displacement-based control: Agents control the relative positions of their neighbors while assuming aligned coordinate frames.
-% \item Distance-based control: Agents maintain specified inter-agent distances using only local measurements, often leading to a more decentralized implementation.
-\end{itemize}
-% Formation control has applications in swarm robotics, UAV formations, satellite coordination, and autonomous vehicle platooning​.
+Formation control refers to the coordination of multiple mobile agents (e.g., robots, drones, or autonomous vehicles) to maintain a specific geometric arrangement while moving or performing tasks. The goal is to control the positions and orientations of agents using only local sensing and communication. As discussed in \cite{oh2015survey}, there is a main approach to formation control: Displacement-based control. Agents control the relative positions of their neighbors while assuming aligned coordinate frames. 
 
-% Formation control has been widely studied for mobile agents. The goal of formation control is to drive a group of agents to achieve and maintain a desired formation. As discussed in \cite{oh2015survey}, a variety of formation control problems can be stated depending on the models of agents and the information that is available to the agents. 
 
 For a group of single-integrator agents, a displacement-based formation control problem can be formulated as follows. Consider the following $N$ single-integrator agents:
 \begin{align} \label{eq_single_integrator}
